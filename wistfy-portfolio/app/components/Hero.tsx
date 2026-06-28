@@ -149,8 +149,9 @@ export default function Hero() {
           ref={containerRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ delay: 1, duration: 1 }}
           style={{
+            opacity: 0,
             transform: 'perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg))',
             transition: 'transform 0.1s ease-out',
           }}
@@ -248,6 +249,7 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="hidden h-[400px] w-full lg:block"
+          style={{ opacity: 0 }}
         >
           <Canvas
             camera={{ position: [0, 0, 5], fov: 45 }}
@@ -266,6 +268,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        style={{ opacity: 0 }}
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}

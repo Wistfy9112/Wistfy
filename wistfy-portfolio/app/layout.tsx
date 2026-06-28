@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth" style={{ backgroundColor: '#0a0a1a' }}>
-      <body className="antialiased" style={{ backgroundColor: '#0a0a1a' }}>
+    <html lang="en" className="scroll-smooth" style={{ backgroundColor: '#000' }}>
+      <body className="antialiased" style={{ backgroundColor: '#000' }}>
         {children}
       </body>
     </html>

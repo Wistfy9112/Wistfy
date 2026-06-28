@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
+import { motion } from 'framer-motion'
 import * as THREE from 'three'
 
 const SECTIONS = ['hero', 'about', 'stats', 'skills', 'projects', 'experience', 'contact']
@@ -265,7 +266,13 @@ export default function ThreeBackground() {
   const [activeIndex, setActiveIndex] = useState(0)
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0" style={{ backgroundColor: '#000' }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.5 }}
+      className="pointer-events-none fixed inset-0 z-0"
+      style={{ backgroundColor: '#000', opacity: 0 }}
+    >
       <SectionDetector onChange={setActiveIndex} />
       <Canvas
         camera={{ position: [0, 3.5, 7], fov: 60, near: 0.1, far: 150 }}
@@ -279,6 +286,6 @@ export default function ThreeBackground() {
       >
         <LyokoScene activeIndex={activeIndex} />
       </Canvas>
-    </div>
+    </motion.div>
   )
 }
