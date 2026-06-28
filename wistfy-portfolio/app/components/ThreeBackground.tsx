@@ -5,15 +5,17 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { motion } from 'framer-motion'
 import * as THREE from 'three'
 
-const SECTIONS = ['hero', 'about', 'stats', 'skills', 'projects', 'experience', 'contact']
+const SECTIONS = ['hero', 'about', 'stats', 'skills', 'education', 'projects', 'experience', 'activity', 'contact']
 interface Style { grid: string; accent: string; sky: string }
 const SECTOR: Record<string, Style> = {
   hero: { grid: '#a78bfa', accent: '#fbbf24', sky: '#3b0764' },
   about: { grid: '#2dd4bf', accent: '#6ee7b7', sky: '#064e3b' },
   stats: { grid: '#38bdf8', accent: '#7dd3fc', sky: '#0c4a6e' },
   skills: { grid: '#facc15', accent: '#fde047', sky: '#713f12' },
+  education: { grid: '#a78bfa', accent: '#c4b5fd', sky: '#4c1d95' },
   projects: { grid: '#67e8f9', accent: '#a5f3fc', sky: '#164e63' },
   experience: { grid: '#fb923c', accent: '#fdba74', sky: '#7c2d12' },
+  activity: { grid: '#34d399', accent: '#6ee7b7', sky: '#064e3b' },
   contact: { grid: '#e879f9', accent: '#f0abfc', sky: '#581c87' },
 }
 function getStyle(i: number) { return SECTOR[SECTIONS[i]] }
