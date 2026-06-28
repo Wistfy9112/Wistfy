@@ -70,7 +70,7 @@ function SkillBar({ name, level, index }: { name: string; level: number; index: 
 
 export default function Skills() {
   return (
-    <section id="skills" className="section-padding mx-auto max-w-6xl">
+    <section id="skills" className="section-padding relative mx-auto max-w-6xl">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}

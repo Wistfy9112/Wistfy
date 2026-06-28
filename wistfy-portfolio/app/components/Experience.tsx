@@ -37,7 +37,7 @@ const experiences = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="section-padding mx-auto max-w-6xl">
+    <section id="experience" className="section-padding relative mx-auto max-w-6xl">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}

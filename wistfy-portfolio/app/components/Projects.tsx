@@ -143,7 +143,7 @@ function TiltCard({ project, index }: { project: typeof projects[0]; index: numb
 
 export default function Projects() {
   return (
-    <section id="projects" className="section-padding mx-auto max-w-6xl">
+    <section id="projects" className="section-padding relative mx-auto max-w-6xl">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}

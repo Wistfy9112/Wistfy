@@ -61,7 +61,7 @@ function AnimatedCounter({ to, suffix, label, icon: Icon }: { to: number; suffix
 
 export default function Stats() {
   return (
-    <section id="stats" className="section-padding mx-auto max-w-6xl">
+    <section id="stats" className="section-padding relative mx-auto max-w-6xl">
       <div className="grid gap-6 md:grid-cols-4">
         {stats.map((stat) => (
           <AnimatedCounter key={stat.label} {...stat} />
