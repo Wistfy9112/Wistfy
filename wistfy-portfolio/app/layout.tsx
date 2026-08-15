@@ -1,14 +1,38 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 
+const display = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
+})
+
+const sans = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
-  title: 'Wistfy | Portfolio',
-  description: 'Full-stack developer portfolio showcasing projects, skills, and experience',
+  title: 'WISTFY | SYSTEM PORTFOLIO',
+  description:
+    'Interactive virtual portfolio of WISTFY — graphics programmer, software engineer, creative technologist. Building systems, rendering experiences, turning ideas into interactive worlds.',
   openGraph: {
-    title: 'Wistfy | Portfolio',
-    description: 'Full-stack developer portfolio',
+    title: 'WISTFY | SYSTEM PORTFOLIO',
+    description: 'Enter the WISTFY virtual system — a graphics programmer portfolio that behaves like a computer.',
     type: 'website',
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#030509',
 }
 
 export default function RootLayout({
@@ -17,10 +41,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth" style={{ backgroundColor: '#000' }}>
-      <body className="antialiased" style={{ backgroundColor: '#000' }}>
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      style={{ backgroundColor: '#030509' }}
+    >
+      <body style={{ backgroundColor: '#030509' }}>{children}</body>
     </html>
   )
 }

@@ -1,78 +1,101 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
-const skillCategories = [
-  {
-    title: 'Languages',
-    skills: ['C++', 'C', 'GLSL', 'Python', 'Rust'],
-  },
-  {
-    title: 'Graphics & APIs',
-    skills: ['OpenGL', 'Vulkan', 'DirectX 11', 'WebGL', 'CUDA'],
-  },
-  {
-    title: 'Tools & Engines',
-    skills: ['Unreal Engine', 'Unity', 'CMake', 'Git', 'RenderDoc'],
-  },
-]
-
-function SkillTag({ name, index }: { name: string; index: number }) {
-  return (
-    <motion.span
-      initial={{ opacity: 0, scale: 0.85 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
-      className="inline-block rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-gray-text transition-all hover:border-primary/50 hover:text-primary hover:glow-sm"
-    >
-      {name}
-    </motion.span>
-  )
-}
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { SKILL_MODULES } from '@/app/data/system'
+import { useSystem } from '@/app/system/SystemProvider'
+import { sfx } from '@/app/utils/sound'
+import SectionShell from '@/app/components/system/SectionShell'
 
 export default function Skills() {
+  const { soundOn, pushLog } = useSystem()
+  const [open, setOpen] = useState<string[]>(['graphics-engine'])
+
+  const toggle = (id: string) => {
+    if (soundOn) sfx.click()
+    setOpen((prev) => {
+      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      pushLog(next.includes(id) ? `Module expanded: ${id.toUpperCase()}` : `Module collapsed: ${id.toUpperCase()}`)
+      return next
+    })
+  }
+
   return (
-    <section id="skills" className="section-padding relative mx-auto max-w-6xl">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.6 }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-4 inline-block rounded-full border border-primary/20 bg-primary/5 px-5 py-2 text-sm font-medium text-primary"
-        >
-          Skills
-        </motion.div>
+    <SectionShell id="module-skills" title="System Modules" code="MODULE_03">
+      <div className="mb-8">
+        <p className="max-w-xl text-sm leading-relaxed text-ink-2 md:text-base">
+          Skills represented as loaded system modules. Expand a module to inspect its registered
+          capabilities.
+        </p>
+      </div>
 
-        <h3 className="mb-12 text-4xl font-bold md:text-5xl">
-          My <span className="text-gradient">Tech Stack</span>
-        </h3>
-
-        <div className="grid gap-8 md:grid-cols-3">
-          {skillCategories.map((category, catIndex) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: catIndex * 0.1, duration: 0.5 }}
-              className="rounded-2xl border border-dark-3 bg-dark-2/50 p-6 transition-all hover:border-primary/20"
+      <div className="space-y-3">
+        {SKILL_MODULES.map((mod, idx) => {
+          const isOpen = open.includes(mod.id)
+          return (
+            <div
+              key={mod.id}
+              className={`hud-frame hud-corners relative overflow-hidden transition-colors ${
+                isOpen ? 'border-line-strong' : ''
+              }`}
             >
-              <h4 className="mb-5 text-lg font-semibold">{category.title}</h4>
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, i) => (
-                  <SkillTag key={skill} name={skill} index={i} />
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-    </section>
+              <span className="corner-tick tl" />
+              <span className="corner-tick tr" />
+
+              <button
+                onClick={() => toggle(mod.id)}
+                className="flex w-full items-center gap-4 px-5 py-4 text-left md:px-7"
+                aria-expanded={isOpen}
+              >
+                <span className="mono text-[10px] tracking-[0.25em] text-ink-4">
+                  MOD_{String(idx + 1).padStart(2, '0')}
+                </span>
+                <span className="flex-1">
+                  <span className="display block text-lg font-semibold tracking-wide text-ink md:text-xl">
+                    {mod.name}
+                  </span>
+                  <span className="mono mt-0.5 block text-[10px] tracking-[0.15em] text-ink-3">
+                    {mod.description}
+                  </span>
+                </span>
+                <span
+                  className={`mono text-[10px] tracking-[0.2em] transition-all duration-300 ${
+                    isOpen ? 'text-cyan' : 'text-ink-4'
+                  }`}
+                >
+                  {isOpen ? '[ − ]' : '[ + ]'}
+                </span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="grid gap-x-8 gap-y-3 border-t border-line px-5 py-5 md:grid-cols-2 md:px-7 md:py-6">
+                      {mod.items.map((item, i) => (
+                        <div key={item} className="flex items-center gap-3">
+                          <span className="mono text-[10px] tracking-[0.2em] text-ink-4">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <span
+                            className="h-px w-6"
+                            style={{ background: 'var(--line-strong)' }}
+                          />
+                          <span className="text-sm text-ink-2">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )
+        })}
+      </div>
+    </SectionShell>
   )
 }
