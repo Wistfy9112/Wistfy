@@ -7,10 +7,10 @@ import { sfx } from '@/app/utils/sound'
 import SectionShell from '@/app/components/system/SectionShell'
 
 const CHANNELS = [
-  { id: 'GITHUB', label: 'github.com/Wistfy9112', href: PROFILE.contact.github },
-  { id: 'LINKEDIN', label: 'in/vo-dinh-huy', href: PROFILE.contact.linkedin },
-  { id: 'EMAIL', label: PROFILE.contact.email, href: `mailto:${PROFILE.contact.email}` },
-  { id: 'FACEBOOK', label: '/Wistfy', href: PROFILE.contact.facebook },
+  { id: 'GITHUB', label: 'github.com/Wistfy9112', href: PROFILE.contact.github, sig: 'CODE / SOURCE' },
+  { id: 'LINKEDIN', label: 'in/vo-dinh-huy', href: PROFILE.contact.linkedin, sig: 'PROFESSIONAL' },
+  { id: 'EMAIL', label: PROFILE.contact.email, href: `mailto:${PROFILE.contact.email}`, sig: 'DIRECT LINK' },
+  { id: 'FACEBOOK', label: '/Wistfy', href: PROFILE.contact.facebook, sig: 'SOCIAL' },
 ]
 
 export default function Contact() {
@@ -42,11 +42,11 @@ export default function Contact() {
               SYSTEM READY
             </div>
             <h3 className="display mb-3 text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-              Want to build something interesting?
+              The comms channel is open.
             </h3>
             <p className="max-w-md text-sm leading-relaxed text-ink-2 md:text-base">
-              The connection module is open. Open a channel and let&apos;s talk about rendering,
-              systems, or anything that runs fast and looks good.
+              Pick a channel and send a signal. Rendering, systems, or anything that runs fast and
+              looks good — I usually respond within a few days.
             </p>
           </div>
 
@@ -71,6 +71,9 @@ export default function Contact() {
                 </span>
                 <span className="ml-auto flex-1 truncate text-right text-[11px] text-ink-4 group-hover:text-ink-2">
                   {ch.label}
+                </span>
+                <span className="mono hidden text-[9px] tracking-[0.15em] text-ink-4 sm:inline">
+                  {ch.sig}
                 </span>
                 <span className="text-ink-4 transition-transform group-hover:translate-x-1 group-hover:text-cyan">
                   ▸

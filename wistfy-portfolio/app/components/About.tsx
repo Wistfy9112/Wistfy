@@ -32,6 +32,20 @@ export default function About() {
           </span>
         </div>
 
+        <div className="mb-10 space-y-4 text-base leading-relaxed text-ink-2 md:text-lg">
+          <p>
+            I&apos;m a graphics programmer and software engineer who builds things the way I learn
+            best — from the inside out. Instead of reading about how a renderer works, I write one.
+            Instead of trusting a framework&apos;s abstractions, I take them apart to see what&apos;s
+            underneath.
+          </p>
+          <p className="text-ink-3">
+            That instinct shows up in everything here: real-time rendering engines, GPU pipelines,
+            systems experiments, and this very site — a portfolio designed as a virtual computer
+            system. Keep scrolling; the project map below is where the work actually lives.
+          </p>
+        </div>
+
         <div className="grid gap-8 md:grid-cols-[1fr_1.4fr]">
           <div>
             <Row label="USER" value={PROFILE.name} />

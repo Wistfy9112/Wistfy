@@ -6,8 +6,10 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import type { Project } from '@/app/data/projects'
+import { subscribeGpuMode, getGpuMode } from '@/app/utils/webgl'
 
 export type ModuleId = 'projects' | 'about' | 'skills' | 'contact'
 
@@ -35,6 +37,7 @@ interface SystemState {
   enableDebug: () => void
   reducedMotion: boolean
   isTouch: boolean
+  gpuMode: 'ONLINE' | 'FALLBACK'
 }
 
 const SystemContext = createContext<SystemState | null>(null)
@@ -68,6 +71,7 @@ export function SystemProvider({ children }: { children: React.ReactNode }) {
   const [debugMode, setDebugMode] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(prefersReducedMotion)
   const [isTouch, setIsTouch] = useState(prefersTouch)
+  const gpuMode = useSyncExternalStore(subscribeGpuMode, getGpuMode, () => 'ONLINE' as const)
   const idRef = useRef(0)
 
   useEffect(() => {
@@ -142,6 +146,7 @@ export function SystemProvider({ children }: { children: React.ReactNode }) {
     enableDebug,
     reducedMotion,
     isTouch,
+    gpuMode,
   }
 
   return <SystemContext.Provider value={value}>{children}</SystemContext.Provider>

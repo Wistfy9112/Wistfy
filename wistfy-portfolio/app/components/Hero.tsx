@@ -6,48 +6,64 @@ import { PROFILE } from '@/app/data/system'
 import { useSystem } from '@/app/system/SystemProvider'
 import { sfx } from '@/app/utils/sound'
 
-const ROLES = ['GRAPHICS PROGRAMMER', 'SOFTWARE ENGINEER', 'CREATIVE TECHNOLOGIST']
+const CLASSIFICATION = [
+  { code: 'ROLE_01', label: 'GRAPHICS PROGRAMMER' },
+  { code: 'ROLE_02', label: 'SOFTWARE ENGINEER' },
+  { code: 'ROLE_03', label: 'CREATIVE TECHNOLOGIST' },
+]
 
-export default function Hero() {
-  const { soundOn, pushLog, debugMode, reducedMotion } = useSystem()
-  const [typed, setTyped] = useState(reducedMotion ? ROLES[0] : '')
-  const [roleIndex, setRoleIndex] = useState(0)
-  const [deleting, setDeleting] = useState(false)
+const READY_STATES = [
+  'CONNECTING TO VIRTUAL ENVIRONMENT',
+  'GPU SUBSYSTEM: ONLINE',
+  'PROJECT DATABASE: MOUNTED',
+  'VIRTUAL ENVIRONMENT READY',
+]
+
+function useReadyTerminal() {
+  const { reducedMotion } = useSystem()
+  const [stateIndex, setStateIndex] = useState(() =>
+    reducedMotion ? READY_STATES.length - 1 : 0
+  )
+  const [typed, setTyped] = useState(() =>
+    reducedMotion ? READY_STATES[READY_STATES.length - 1] : ''
+  )
 
   useEffect(() => {
     if (reducedMotion) return
     let timeout: ReturnType<typeof setTimeout>
-    const current = ROLES[roleIndex]
+    const current = READY_STATES[stateIndex]
 
-    if (!deleting) {
-      if (typed.length < current.length) {
-        timeout = setTimeout(() => setTyped(current.slice(0, typed.length + 1)), 55)
-      } else {
-        timeout = setTimeout(() => setDeleting(true), 1800)
-      }
-    } else {
-      if (typed.length > 0) {
-        timeout = setTimeout(() => setTyped(current.slice(0, typed.length - 1)), 28)
-      } else {
-        timeout = setTimeout(() => {
-          setDeleting(false)
-          setRoleIndex((i) => (i + 1) % ROLES.length)
-        }, 200)
-      }
+    if (typed.length < current.length) {
+      timeout = setTimeout(() => setTyped(current.slice(0, typed.length + 1)), 34)
+    } else if (stateIndex < READY_STATES.length - 1) {
+      timeout = setTimeout(() => {
+        setStateIndex((i) => i + 1)
+        setTyped('')
+      }, 420)
     }
     return () => clearTimeout(timeout)
-  }, [typed, deleting, roleIndex, reducedMotion])
+  }, [typed, stateIndex, reducedMotion])
+
+  return { stateIndex, typed }
+}
+
+export default function Hero() {
+  const { soundOn, pushLog, debugMode, gpuMode, reducedMotion } = useSystem()
+  const { stateIndex, typed } = useReadyTerminal()
 
   const scrollToProjects = () => {
     if (soundOn) sfx.select()
-    pushLog('Opening PROJECT DATABASE...')
+    pushLog('ACCESSING PROJECT DATABASE...')
     document.getElementById('module-projects')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   const scrollToAbout = () => {
     if (soundOn) sfx.click()
+    pushLog('Opening system profile...')
     document.getElementById('module-about')?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const isReady = stateIndex === READY_STATES.length - 1 && typed === READY_STATES[READY_STATES.length - 1]
 
   return (
     <section
@@ -80,17 +96,17 @@ export default function Hero() {
         </motion.div>
 
         <div className="mt-8 space-y-1">
-          {ROLES.map((role, i) => (
-            <div key={role} className="flex items-center gap-4">
-              <span className="mono text-[10px] tracking-[0.2em] text-ink-4">
-                ROL_{String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                className={`display text-xl font-medium tracking-wide md:text-2xl ${
-                  i === 0 ? 'text-cyan' : 'text-ink-2'
-                }`}
-              >
-                {role}
+          <div className="flex items-center gap-4">
+            <span className="mono text-[10px] tracking-[0.2em] text-cyan">IDENTITY /</span>
+            <span className="display text-xl font-medium tracking-wide text-ink md:text-2xl">
+              WISTFY
+            </span>
+          </div>
+          {CLASSIFICATION.map((c) => (
+            <div key={c.code} className="flex items-center gap-4">
+              <span className="mono text-[10px] tracking-[0.2em] text-ink-4">{c.code}</span>
+              <span className="display text-xl font-medium tracking-wide text-ink-2 md:text-2xl">
+                {c.label}
               </span>
             </div>
           ))}
@@ -107,17 +123,20 @@ export default function Hero() {
 
         <div className="mono mt-6 flex items-center gap-2 text-[11px] tracking-[0.2em] text-ink-4">
           <span className="text-cyan">&gt;</span>
-          <span className="text-ink-2">INIT:</span> {typed}
+          <span className={isReady ? 'text-cyan' : 'text-ink-2'}>{typed}</span>
           <span className="cursor-blink text-cyan">▌</span>
+        </div>
+        <div className="mono mt-1 text-[9px] tracking-[0.25em] text-ink-4">
+          {gpuMode === 'FALLBACK' ? 'GRAPHICS MODE: FALLBACK' : 'RENDER: WEBGL / REAL-TIME'}
         </div>
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
           <button onClick={scrollToProjects} className="btn-hud" aria-label="Enter project database">
             <span className="inline-block size-2 bg-cyan" />
-            ENTER PROJECT DATABASE
+            [ ACCESS DATABASE ]
           </button>
           <button onClick={scrollToAbout} className="btn-hud btn-ghost">
-            SYSTEM PROFILE
+            [ SYSTEM PROFILE ]
           </button>
         </div>
       </div>

@@ -4,11 +4,17 @@ import { useEffect, useRef, useState } from 'react'
 import { useSystem, type ModuleId } from '@/app/system/SystemProvider'
 import { sfx } from '@/app/utils/sound'
 
-const MODULES: { id: ModuleId; code: string; label: string; section: string }[] = [
-  { id: 'projects', code: 'SYS//01', label: 'PROJECTS', section: 'module-projects' },
-  { id: 'about', code: 'SYS//02', label: 'ABOUT', section: 'module-about' },
-  { id: 'skills', code: 'SYS//03', label: 'SKILLS', section: 'module-skills' },
-  { id: 'contact', code: 'SYS//04', label: 'CONTACT', section: 'module-contact' },
+const MODULES: {
+  id: ModuleId
+  code: string
+  label: string
+  section: string
+  hint: string
+}[] = [
+  { id: 'projects', code: 'SYS//01', label: 'PROJECTS', section: 'module-projects', hint: 'ACCESS PROJECT DATABASE' },
+  { id: 'about', code: 'SYS//02', label: 'ABOUT', section: 'module-about', hint: 'OPEN SYSTEM PROFILE' },
+  { id: 'skills', code: 'SYS//03', label: 'SKILLS', section: 'module-skills', hint: 'LOAD SYSTEM MODULES' },
+  { id: 'contact', code: 'SYS//04', label: 'CONTACT', section: 'module-contact', hint: 'ESTABLISH CONNECTION' },
 ]
 
 function useClock() {
@@ -36,6 +42,35 @@ function useClock() {
   return { time, uptime }
 }
 
+function useFps() {
+  const [fps, setFps] = useState(0)
+  const framesRef = useRef(0)
+  const lastRef = useRef(0)
+
+  useEffect(() => {
+    let raf = 0
+    const loop = (t: number) => {
+      raf = requestAnimationFrame(loop)
+      if (lastRef.current === 0) {
+        lastRef.current = t
+        return
+      }
+      framesRef.current++
+      const dt = t - lastRef.current
+      if (dt >= 1000) {
+        const value = Math.round((framesRef.current * 1000) / dt)
+        setFps(value)
+        framesRef.current = 0
+        lastRef.current = t
+      }
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  return fps
+}
+
 export function useActiveModule() {
   const { setActiveModule } = useSystem()
   useEffect(() => {
@@ -60,8 +95,9 @@ export function useActiveModule() {
 }
 
 export function HudTop() {
-  const { soundOn, toggleSound, pushLog, debugMode, enableDebug } = useSystem()
+  const { soundOn, toggleSound, pushLog, debugMode, enableDebug, gpuMode } = useSystem()
   const { time, uptime } = useClock()
+  const fps = useFps()
   const [clicks, setClicks] = useState(0)
 
   const handleSysClicks = () => {
@@ -90,8 +126,12 @@ export function HudTop() {
       </button>
 
       <div className="pointer-events-auto flex items-center gap-4 md:gap-6">
-        <span className="hidden text-ink-3 sm:inline">UPTIME {uptime}s</span>
-        <span className="hidden text-ink-3 md:inline">{time}</span>
+        <span className="hidden text-ink-3 sm:inline">
+          GPU: {gpuMode === 'FALLBACK' ? 'FALLBACK' : 'ONLINE'}
+        </span>
+        <span className="hidden text-ink-3 md:inline">FPS {fps}</span>
+        <span className="hidden text-ink-3 lg:inline">UPTIME {uptime}s</span>
+        <span className="hidden text-ink-3 2xl:inline">{time}</span>
         <button
           onClick={() => {
             toggleSound()
@@ -111,7 +151,7 @@ export function HudTop() {
 export function HudRail() {
   const { activeModule, setActiveModule, pushLog, soundOn } = useSystem()
 
-  const go = (mod: { id: ModuleId; code: string; label: string; section: string }) => {
+  const go = (mod: (typeof MODULES)[number]) => {
     if (soundOn) sfx.click()
     setActiveModule(mod.id)
     pushLog(`Module selected: ${mod.label}`)
@@ -129,27 +169,28 @@ export function HudRail() {
           <button
             key={mod.id}
             onClick={() => go(mod)}
-            className={`pointer-events-auto group flex items-center gap-3 py-2 text-left transition-colors ${
+            className={`pointer-events-auto group relative flex items-center gap-3 py-2 text-left transition-colors ${
               active ? 'text-cyan' : 'text-ink-4 hover:text-ink-2'
             }`}
             aria-current={active ? 'true' : undefined}
           >
-            <span
-              className="inline-block h-px transition-all duration-300"
-              style={{
-                width: active ? 28 : 16,
-                background: active ? 'var(--accent)' : 'var(--color-ink-4)',
-              }}
-            />
+            <span className={`transition-colors ${active ? 'text-cyan' : 'text-ink-4'}`}>
+              {active ? '━━' : '──'}
+            </span>
             <span className="flex flex-col leading-tight">
-              <span>{mod.label}</span>
+              <span className="flex items-center gap-2">
+                <span
+                  className={`inline-block size-1.5 rounded-full transition-all ${
+                    active ? 'bg-cyan pulse-ring' : 'bg-ink-4 group-hover:bg-ink-3'
+                  }`}
+                />
+                {mod.label}
+              </span>
               <span className="text-[8px] tracking-[0.2em] text-ink-4">{mod.code}</span>
             </span>
-            <span
-              className={`ml-1 inline-block size-1.5 rounded-full transition-all ${
-                active ? 'bg-cyan pulse-ring' : 'bg-ink-4 group-hover:bg-ink-3'
-              }`}
-            />
+            <span className="pointer-events-none absolute left-full ml-4 whitespace-nowrap border border-line bg-abyss-1/90 px-3 py-1.5 text-[9px] tracking-[0.15em] text-cyan opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              {mod.hint}
+            </span>
           </button>
         )
       })}

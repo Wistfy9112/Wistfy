@@ -124,8 +124,8 @@ button {
 
 .tech-grid-fade {
   background-image:
-    linear-gradient(to right, rgba(108, 193, 230, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(108, 193, 230, 0.07) 1px, transparent 1px);
+    linear-gradient(to right, rgba(108, 193, 230, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(108, 193, 230, 0.05) 1px, transparent 1px);
   background-size: var(--grid-cell) var(--grid-cell);
   mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 80%);

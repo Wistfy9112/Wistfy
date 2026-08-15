@@ -15,7 +15,7 @@ export default function SystemLog() {
   }, [log])
 
   return (
-    <div className="mono fixed bottom-6 left-1/2 z-40 hidden w-[min(560px,80vw)] -translate-x-1/2 md:block">
+    <div className="mono fixed bottom-6 right-4 z-40 hidden w-[min(380px,80vw)] md:block">
       <div className="hud-frame hud-corners overflow-hidden">
         <button
           onClick={() => setExpanded((e) => !e)}

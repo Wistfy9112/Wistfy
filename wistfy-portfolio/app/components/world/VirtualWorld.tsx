@@ -4,6 +4,7 @@ import { useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useSystem } from '@/app/system/SystemProvider'
+import { projects, getSectorForProject } from '@/app/data/projects'
 
 /* ------------------------------------------------------------------ */
 /* Grid texture                                                        */
@@ -43,7 +44,7 @@ function GridFloor() {
   useFrame((state) => {
     const t = state.clock.elapsedTime
     const mat = ref.current.material as THREE.MeshBasicMaterial
-    mat.opacity = 0.32 + Math.sin(t * 0.35) * 0.05
+    mat.opacity = 0.24 + Math.sin(t * 0.35) * 0.04
     mat.map!.offset.y = (t * 0.02) % 1
   })
 
@@ -53,7 +54,7 @@ function GridFloor() {
       <meshBasicMaterial
         map={makeGridTexture()}
         transparent
-        opacity={0.32}
+        opacity={0.24}
         depthWrite={false}
         side={THREE.DoubleSide}
       />
@@ -64,21 +65,38 @@ function GridFloor() {
 /* ------------------------------------------------------------------ */
 /* Abstract data towers (wireframe geometry)                           */
 /* ------------------------------------------------------------------ */
-const TOWER_LAYOUT: { pos: [number, number, number]; kind: 'octa' | 'box' | 'ico'; scale: number; speed: number }[] = [
-  { pos: [-6, 0.5, -6], kind: 'octa', scale: 1.4, speed: 0.4 },
-  { pos: [7, 1, -9], kind: 'box', scale: 1.2, speed: 0.5 },
-  { pos: [2.5, 0.6, -12], kind: 'ico', scale: 1.1, speed: 0.35 },
-  { pos: [-3, 0.3, -10], kind: 'box', scale: 0.8, speed: 0.6 },
-  { pos: [5, 0.8, -16], kind: 'octa', scale: 1.6, speed: 0.45 },
-  { pos: [-8, 0.4, -14], kind: 'ico', scale: 0.9, speed: 0.55 },
-  { pos: [0, 0.5, -20], kind: 'octa', scale: 2.0, speed: 0.3 },
-  { pos: [-5, 0.5, -22], kind: 'box', scale: 1.1, speed: 0.5 },
-  { pos: [8, 0.6, -24], kind: 'ico', scale: 1.3, speed: 0.42 },
-  { pos: [2, 0.3, -28], kind: 'octa', scale: 1.0, speed: 0.6 },
-]
+const TOWER_LAYOUT: {
+  pos: [number, number, number]
+  kind: 'octa' | 'box' | 'ico'
+  scale: number
+  speed: number
+  projectId: string
+}[] = (
+  [
+    { pos: [-6, 0.5, -6], kind: 'octa', scale: 1.4, speed: 0.4 },
+    { pos: [7, 1, -9], kind: 'box', scale: 1.2, speed: 0.5 },
+    { pos: [2.5, 0.6, -12], kind: 'ico', scale: 1.1, speed: 0.35 },
+    { pos: [-3, 0.3, -10], kind: 'box', scale: 0.8, speed: 0.6 },
+    { pos: [5, 0.8, -16], kind: 'octa', scale: 1.6, speed: 0.45 },
+    { pos: [-8, 0.4, -14], kind: 'ico', scale: 0.9, speed: 0.55 },
+    { pos: [0, 0.5, -20], kind: 'octa', scale: 2.0, speed: 0.3 },
+    { pos: [-5, 0.5, -22], kind: 'box', scale: 1.1, speed: 0.5 },
+    { pos: [8, 0.6, -24], kind: 'ico', scale: 1.3, speed: 0.42 },
+    { pos: [2, 0.3, -28], kind: 'octa', scale: 1.0, speed: 0.6 },
+  ] as { pos: [number, number, number]; kind: 'octa' | 'box' | 'ico'; scale: number; speed: number }[]
+).map((t, i) => ({ ...t, projectId: projects[i]?.id ?? 'unknown' }))
 
-function Tower({ data, reduced }: { data: (typeof TOWER_LAYOUT)[0]; reduced: boolean }) {
+function Tower({
+  data,
+  reduced,
+  focused,
+}: {
+  data: (typeof TOWER_LAYOUT)[0]
+  reduced: boolean
+  focused: boolean
+}) {
   const ref = useRef<THREE.Mesh>(null!)
+  const baseScale = data.scale
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
@@ -87,6 +105,11 @@ function Tower({ data, reduced }: { data: (typeof TOWER_LAYOUT)[0]; reduced: boo
     if (!reduced) {
       ref.current.position.y = data.pos[1] + Math.sin(t * data.speed + data.pos[0]) * 0.12
     }
+    const target = focused ? baseScale * 1.35 : baseScale
+    ref.current.scale.setScalar(THREE.MathUtils.lerp(ref.current.scale.x, target, 0.08))
+    const mat = ref.current.material as THREE.MeshBasicMaterial
+    const targetOpacity = focused ? 0.95 : 0.5
+    mat.opacity = THREE.MathUtils.lerp(mat.opacity, targetOpacity, 0.08)
   })
 
   const geometry = useMemo(() => {
@@ -113,7 +136,7 @@ function Tower({ data, reduced }: { data: (typeof TOWER_LAYOUT)[0]; reduced: boo
       geometry={geometry}
       material={mat}
       position={data.pos}
-      scale={[data.scale, data.scale, data.scale]}
+      scale={[baseScale, baseScale, baseScale]}
     />
   )
 }
@@ -264,19 +287,51 @@ function ParticleField({ count, reduced }: { count: number; reduced: boolean }) 
 /* Scene + camera parallax                                             */
 /* ------------------------------------------------------------------ */
 function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
+  const { activeProject } = useSystem()
   const group = useRef<THREE.Group>(null!)
   const cameraPos = useRef({ x: 0, y: 0 })
+  const focusPos = useRef<THREE.Vector3 | null>(null)
+
+  const focusedIndex = useMemo(
+    () =>
+      activeProject
+        ? TOWER_LAYOUT.findIndex((t) => t.projectId === activeProject.id)
+        : -1,
+    [activeProject]
+  )
+
+  const focusedTower = focusedIndex >= 0 ? TOWER_LAYOUT[focusedIndex] : null
 
   useFrame((state) => {
     if (reduced) return
     const { pointer } = state
-    cameraPos.current.x += (pointer.x * 0.8 - cameraPos.current.x) * 0.05
-    cameraPos.current.y += (pointer.y * 0.5 - cameraPos.current.y) * 0.05
+
+    if (focusedTower) {
+      focusPos.current = new THREE.Vector3(
+        focusedTower.pos[0],
+        focusedTower.pos[1] + 0.5,
+        focusedTower.pos[2] + 3
+      )
+    } else {
+      focusPos.current = null
+    }
+
+    const targetX = focusPos.current ? focusPos.current.x + pointer.x * 0.6 : pointer.x * 0.8
+    const targetY = focusPos.current ? focusPos.current.y + pointer.y * 0.35 : pointer.y * 0.5
+    cameraPos.current.x += (targetX - cameraPos.current.x) * 0.05
+    cameraPos.current.y += (targetY - cameraPos.current.y) * 0.05
     state.camera.position.x = cameraPos.current.x
     state.camera.position.y = cameraPos.current.y
-    state.camera.lookAt(cameraPos.current.x * 0.5, cameraPos.current.y * 0.3, -12)
+    const lookTarget = focusPos.current
+      ? new THREE.Vector3(
+          focusPos.current.x * 0.5,
+          focusPos.current.y * 0.5,
+          focusPos.current.z
+        )
+      : new THREE.Vector3(cameraPos.current.x * 0.5, cameraPos.current.y * 0.3, -12)
+    state.camera.lookAt(lookTarget)
     if (group.current) {
-      group.current.rotation.y = pointer.x * 0.03
+      group.current.rotation.y = focusPos.current ? 0.06 : pointer.x * 0.03
     }
   })
 
@@ -284,7 +339,7 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
     <group ref={group}>
       <GridFloor />
       {TOWER_LAYOUT.map((t, i) => (
-        <Tower key={i} data={t} reduced={reduced} />
+        <Tower key={i} data={t} reduced={reduced} focused={focusedIndex === i} />
       ))}
       <NetworkField reduced={reduced || touch} />
       <ParticleField count={touch ? 300 : 900} reduced={reduced} />
@@ -294,10 +349,36 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Focus readout (DOM overlay for active node coordinates)             */
+/* ------------------------------------------------------------------ */
+function FocusReadout() {
+  const { activeProject } = useSystem()
+  if (!activeProject) return null
+  const sector = getSectorForProject(activeProject.id)
+  return (
+    <div
+      className="mono pointer-events-none fixed right-4 top-14 z-30 hidden border border-line bg-abyss-1/80 px-3 py-2 text-[9px] leading-relaxed tracking-[0.2em] text-ink-3 backdrop-blur-sm md:block"
+      aria-live="polite"
+    >
+      <div>
+        <span className="text-cyan">NODE:</span> {activeProject.id.toUpperCase()}
+      </div>
+      <div>
+        <span className="text-cyan">SECTOR:</span> {sector?.code ?? 'UNKNOWN'}
+      </div>
+      <div>
+        <span className="text-cyan">COORD:</span> X:{String(activeProject.node.x).padStart(2, '0')} Y:
+        {String(activeProject.node.y).padStart(2, '0')}
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /* Canvas wrapper                                                      */
 /* ------------------------------------------------------------------ */
 export default function VirtualWorld() {
-  const { reducedMotion, isTouch } = useSystem()
+  const { reducedMotion, isTouch, gpuMode } = useSystem()
 
   return (
     <div
@@ -305,19 +386,24 @@ export default function VirtualWorld() {
       aria-hidden="true"
       style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, #05070a, #030509 70%)' }}
     >
-      <Canvas
-        camera={{ position: [0, 0, 6], fov: 55, near: 0.1, far: 80 }}
-        dpr={[1, isTouch ? 1 : 1.6]}
-        gl={{ antialias: !isTouch, alpha: false, powerPreference: 'high-performance' }}
-        onCreated={({ gl, camera }) => {
-          gl.setClearColor('#030509')
-          gl.clear(true, true, true)
-          camera.lookAt(0, 0, -12)
-        }}
-        style={{ position: 'absolute', inset: 0 }}
-      >
-        <Scene reduced={reducedMotion} touch={isTouch} />
-      </Canvas>
+      {gpuMode === 'FALLBACK' ? (
+        <div className="tech-grid absolute inset-0 opacity-60" />
+      ) : (
+        <Canvas
+          camera={{ position: [0, 0, 6], fov: 55, near: 0.1, far: 80 }}
+          dpr={[1, isTouch ? 1 : 1.6]}
+          gl={{ antialias: !isTouch, alpha: false, powerPreference: 'high-performance' }}
+          onCreated={({ gl, camera }) => {
+            gl.setClearColor('#030509')
+            gl.clear(true, true, true)
+            camera.lookAt(0, 0, -12)
+          }}
+          style={{ position: 'absolute', inset: 0 }}
+        >
+          <Scene reduced={reducedMotion} touch={isTouch} />
+        </Canvas>
+      )}
+      <FocusReadout />
     </div>
   )
 }

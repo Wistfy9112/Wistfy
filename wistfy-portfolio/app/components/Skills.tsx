@@ -13,11 +13,9 @@ export default function Skills() {
 
   const toggle = (id: string) => {
     if (soundOn) sfx.click()
-    setOpen((prev) => {
-      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-      pushLog(next.includes(id) ? `Module expanded: ${id.toUpperCase()}` : `Module collapsed: ${id.toUpperCase()}`)
-      return next
-    })
+    const next = open.includes(id) ? open.filter((x) => x !== id) : [...open, id]
+    pushLog(next.includes(id) ? `Module expanded: ${id.toUpperCase()}` : `Module collapsed: ${id.toUpperCase()}`)
+    setOpen(next)
   }
 
   return (
