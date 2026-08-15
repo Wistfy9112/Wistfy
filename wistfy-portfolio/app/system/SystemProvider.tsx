@@ -11,7 +11,7 @@ import {
 import type { Project } from '@/app/data/projects'
 import { subscribeGpuMode, getGpuMode } from '@/app/utils/webgl'
 
-export type ModuleId = 'projects' | 'about' | 'skills' | 'contact'
+export type ModuleId = 'home' | 'projects' | 'about' | 'skills' | 'contact'
 
 export interface LogEntry {
   id: number

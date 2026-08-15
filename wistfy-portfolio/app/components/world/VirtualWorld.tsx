@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useSystem } from '@/app/system/SystemProvider'
-import { projects, getSectorForProject } from '@/app/data/projects'
+import { projects } from '@/app/data/projects'
 
 /* ------------------------------------------------------------------ */
 /* Grid texture                                                        */
@@ -349,32 +349,6 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Focus readout (DOM overlay for active node coordinates)             */
-/* ------------------------------------------------------------------ */
-function FocusReadout() {
-  const { activeProject } = useSystem()
-  if (!activeProject) return null
-  const sector = getSectorForProject(activeProject.id)
-  return (
-    <div
-      className="mono pointer-events-none fixed right-4 top-14 z-30 hidden border border-line bg-abyss-1/80 px-3 py-2 text-[9px] leading-relaxed tracking-[0.2em] text-ink-3 backdrop-blur-sm md:block"
-      aria-live="polite"
-    >
-      <div>
-        <span className="text-cyan">NODE:</span> {activeProject.id.toUpperCase()}
-      </div>
-      <div>
-        <span className="text-cyan">SECTOR:</span> {sector?.code ?? 'UNKNOWN'}
-      </div>
-      <div>
-        <span className="text-cyan">COORD:</span> X:{String(activeProject.node.x).padStart(2, '0')} Y:
-        {String(activeProject.node.y).padStart(2, '0')}
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
 /* Canvas wrapper                                                      */
 /* ------------------------------------------------------------------ */
 export default function VirtualWorld() {
@@ -403,7 +377,6 @@ export default function VirtualWorld() {
           <Scene reduced={reducedMotion} touch={isTouch} />
         </Canvas>
       )}
-      <FocusReadout />
     </div>
   )
 }

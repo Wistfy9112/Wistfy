@@ -14,10 +14,11 @@ export interface Project {
   challenges: string[]
   solutions: string[]
   technologies: string[]
+  connections: string[]
   github?: string
   demo?: string
   demoType?: 'webgl' | 'none'
-  node: { x: number; y: number }
+  node: { x: number; y: number; z?: number }
 }
 
 export interface Sector {
@@ -36,31 +37,31 @@ export const sectors: Sector[] = [
     name: 'GRAPHICS',
     description: 'Rendering systems, GPU programming and visual experiments.',
     color: '#3ee6ff',
-    projects: ['opengl-renderer', 'shader-lab', 'particle-system'],
+    projects: ['opengl-renderer', 'shader-lab', 'particle-system', 'raytracer', 'voxel-world'],
   },
   {
-    id: 'systems',
+    id: 'software',
     code: 'SECTOR_02',
-    name: 'SYSTEMS',
-    description: 'Low-level engineering, performance and tooling.',
+    name: 'SOFTWARE',
+    description: 'Low-level engineering, systems and tooling.',
     color: '#8b9bff',
-    projects: ['cpp-sandbox', 'voxel-world', 'raytracer'],
-  },
-  {
-    id: 'intelligence',
-    code: 'SECTOR_03',
-    name: 'INTELLIGENCE',
-    description: 'Machine learning, data analysis and prediction experiments.',
-    color: '#5fd0c0',
-    projects: ['trade-bot', 'ml-notebooks'],
+    projects: ['cpp-sandbox', 'trade-bot'],
   },
   {
     id: 'web',
-    code: 'SECTOR_04',
+    code: 'SECTOR_03',
     name: 'WEB',
     description: 'Interactive applications and full-stack systems.',
     color: '#9fd4f5',
     projects: ['fin-manager', 'wistfy-site'],
+  },
+  {
+    id: 'experiments',
+    code: 'SECTOR_04',
+    name: 'EXPERIMENTS',
+    description: 'Research, data experiments and prototypes.',
+    color: '#5fd0c0',
+    projects: ['ml-notebooks'],
   },
 ]
 
@@ -95,9 +96,10 @@ export const projects: Project[] = [
       'Delta-timed updates decoupled from frame rate',
     ],
     technologies: ['C++', 'OpenGL', 'GLSL', 'GLM', 'CMake'],
+    connections: ['shader-lab', 'particle-system', 'voxel-world'],
     github: 'https://github.com/Wistfy9112',
     demoType: 'webgl',
-    node: { x: 24, y: 22 },
+    node: { x: 14, y: 20, z: 0.4 },
   },
   {
     id: 'shader-lab',
@@ -125,8 +127,9 @@ export const projects: Project[] = [
       'Web Worker shader pre-processing',
     ],
     technologies: ['GLSL', 'TypeScript', 'WebGL 2'],
+    connections: ['opengl-renderer', 'wistfy-site'],
     demoType: 'webgl',
-    node: { x: 68, y: 14 },
+    node: { x: 32, y: 22, z: 0.15 },
   },
   {
     id: 'particle-system',
@@ -154,14 +157,15 @@ export const projects: Project[] = [
       'Configurable LOD with adaptive particle count',
     ],
     technologies: ['C++', 'OpenGL', 'GLSL', 'GLM'],
+    connections: ['opengl-renderer', 'voxel-world'],
     github: 'https://github.com/Wistfy9112',
     demoType: 'webgl',
-    node: { x: 8, y: 52 },
+    node: { x: 18, y: 46, z: 0.6 },
   },
   {
     id: 'cpp-sandbox',
     title: 'C++ Systems Sandbox',
-    category: 'SYSTEMS',
+    category: 'SOFTWARE',
     status: 'COMPLETED',
     language: 'C++',
     api: 'STL / CLI',
@@ -183,13 +187,14 @@ export const projects: Project[] = [
       'Statistical benchmark runs with outlier pruning',
     ],
     technologies: ['C++20', 'CMake', 'Google Benchmark', 'SIMD'],
+    connections: ['voxel-world', 'raytracer'],
     github: 'https://github.com/Wistfy9112',
-    node: { x: 38, y: 34 },
+    node: { x: 74, y: 16, z: -0.1 },
   },
   {
     id: 'voxel-world',
     title: 'Voxel World Prototype',
-    category: 'SYSTEMS',
+    category: 'GRAPHICS',
     status: 'IN PROGRESS',
     language: 'C++',
     api: 'OpenGL',
@@ -212,14 +217,15 @@ export const projects: Project[] = [
       'Inset UVs with half-texel padding',
     ],
     technologies: ['C++', 'OpenGL', 'GLSL', 'GLM'],
+    connections: ['cpp-sandbox', 'raytracer', 'opengl-renderer', 'particle-system'],
     github: 'https://github.com/Wistfy9112',
     demoType: 'webgl',
-    node: { x: 82, y: 40 },
+    node: { x: 88, y: 30, z: 0.3 },
   },
   {
     id: 'raytracer',
     title: 'CPU Ray Tracer',
-    category: 'SYSTEMS',
+    category: 'GRAPHICS',
     status: 'ARCHIVED',
     language: 'C++',
     api: 'STL',
@@ -241,13 +247,14 @@ export const projects: Project[] = [
       'Stratified sampling + clamping + simple denoise pass',
     ],
     technologies: ['C++', 'STL', 'CMake'],
+    connections: ['cpp-sandbox', 'voxel-world'],
     github: 'https://github.com/Wistfy9112',
-    node: { x: 58, y: 62 },
+    node: { x: 70, y: 46, z: -0.3 },
   },
   {
     id: 'trade-bot',
     title: 'Stock Auto-Trading System',
-    category: 'INTELLIGENCE',
+    category: 'SOFTWARE',
     status: 'IN PROGRESS',
     language: 'Python',
     api: 'REST / WebSocket',
@@ -270,13 +277,14 @@ export const projects: Project[] = [
       'Local-queue buffering with timestamp alignment',
     ],
     technologies: ['Python', 'Pandas', 'NumPy', 'SQLite', 'REST'],
+    connections: ['ml-notebooks'],
     github: 'https://github.com/Wistfy9112',
-    node: { x: 30, y: 78 },
+    node: { x: 20, y: 68, z: -0.2 },
   },
   {
     id: 'ml-notebooks',
     title: 'ML & Data Experiments',
-    category: 'INTELLIGENCE',
+    category: 'EXPERIMENTS',
     status: 'ARCHIVED',
     language: 'Python',
     api: 'SciPy / sklearn',
@@ -296,8 +304,9 @@ export const projects: Project[] = [
       'Strict train/test/validation split protocol',
     ],
     technologies: ['Python', 'Pandas', 'scikit-learn', 'Matplotlib', 'Jupyter'],
+    connections: ['trade-bot'],
     github: 'https://github.com/Wistfy9112',
-    node: { x: 70, y: 86 },
+    node: { x: 36, y: 86, z: 0.1 },
   },
   {
     id: 'fin-manager',
@@ -324,9 +333,10 @@ export const projects: Project[] = [
       'ISO 8601 + money-as-integer policy',
     ],
     technologies: ['React', 'TypeScript', 'Flask', 'PostgreSQL', 'REST'],
+    connections: ['wistfy-site'],
     github: 'https://github.com/Wistfy9112',
     demo: '#',
-    node: { x: 44, y: 94 },
+    node: { x: 72, y: 64, z: 0.5 },
   },
   {
     id: 'wistfy-site',
@@ -354,9 +364,10 @@ export const projects: Project[] = [
       'Reduced-motion and keyboard navigation support',
     ],
     technologies: ['React', 'TypeScript', 'Next.js', 'Three.js', 'GLSL'],
+    connections: ['fin-manager', 'shader-lab'],
     github: 'https://github.com/Wistfy9112',
     demoType: 'webgl',
-    node: { x: 92, y: 70 },
+    node: { x: 88, y: 84, z: -0.5 },
   },
 ]
 

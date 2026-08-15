@@ -3,6 +3,7 @@
 import { useSystem, type ModuleId } from '@/app/system/SystemProvider'
 
 const MODULES: { id: ModuleId; label: string; section: string }[] = [
+  { id: 'home', label: 'HOME', section: 'module-hero' },
   { id: 'projects', label: 'PROJECTS', section: 'module-projects' },
   { id: 'about', label: 'ABOUT', section: 'module-about' },
   { id: 'skills', label: 'SKILLS', section: 'module-skills' },

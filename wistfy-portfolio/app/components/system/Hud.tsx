@@ -11,6 +11,7 @@ const MODULES: {
   section: string
   hint: string
 }[] = [
+  { id: 'home', code: 'SYS//00', label: 'HOME', section: 'module-hero', hint: 'RETURN TO INITIALIZATION' },
   { id: 'projects', code: 'SYS//01', label: 'PROJECTS', section: 'module-projects', hint: 'ACCESS PROJECT DATABASE' },
   { id: 'about', code: 'SYS//02', label: 'ABOUT', section: 'module-about', hint: 'OPEN SYSTEM PROFILE' },
   { id: 'skills', code: 'SYS//03', label: 'SKILLS', section: 'module-skills', hint: 'LOAD SYSTEM MODULES' },

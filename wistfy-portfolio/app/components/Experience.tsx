@@ -11,7 +11,7 @@ import MobileNav from '@/app/components/system/MobileNav'
 import Scanlines from '@/app/components/system/Scanlines'
 import EasterEggs from '@/app/components/system/EasterEggs'
 import Hero from '@/app/components/Hero'
-import ProjectMap from '@/app/components/projects/ProjectMap'
+import ProjectGrid from '@/app/components/projects/ProjectGrid'
 import ProjectDetail from '@/app/components/projects/ProjectDetail'
 import About from '@/app/components/About'
 import Skills from '@/app/components/Skills'
@@ -44,7 +44,7 @@ export default function Experience() {
 
       <main className="relative z-10">
         <Hero />
-        <ProjectMap />
+        <ProjectGrid />
         <About />
         <Skills />
         <Contact />
