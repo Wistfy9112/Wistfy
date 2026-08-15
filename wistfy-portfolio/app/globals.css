@@ -57,6 +57,16 @@ body {
   overscroll-behavior-y: none;
 }
 
+/* content surface — dims + softly blurs the 3D background behind
+   reading areas so text always leads, while the atmosphere remains */
+.content-scrim {
+  background:
+    radial-gradient(1100px 600px at 50% 22%, rgba(3, 5, 9, 0.5), transparent 72%),
+    linear-gradient(180deg, rgba(3, 5, 9, 0.34), rgba(3, 5, 9, 0.26) 50%, rgba(3, 5, 9, 0.4));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
 /* ---------- selection & scrollbar ---------- */
 ::selection {
   background: rgba(62, 230, 255, 0.25);
@@ -365,6 +375,218 @@ button {
   border-color: currentColor;
   color: var(--color-ink);
   background: rgba(62, 230, 255, 0.04);
+}
+
+/* ---------- skills signature (rendering core) ---------- */
+.sig-wrap {
+  position: relative;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 400px;
+}
+.sig-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* atmospheric converging plane */
+.sig-atmo {
+  fill: none;
+  stroke: rgba(108, 193, 230, 0.12);
+  stroke-width: 1;
+}
+
+/* coordinate origin */
+.sig-axis {
+  fill: none;
+  stroke: rgba(108, 193, 230, 0.32);
+  stroke-width: 1;
+}
+
+/* core layers — depth via opacity, thin lines, no glow */
+.sig-core {
+  transform-origin: 176px 210px;
+  animation: sig-spin 120s linear infinite;
+}
+@keyframes sig-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sig-layer-a {
+  fill: none;
+  stroke: #3ee6ff;
+  stroke-width: 1;
+}
+.sig-layer-b {
+  fill: none;
+  stroke: rgba(62, 230, 255, 0.75);
+  stroke-width: 1;
+  opacity: 0.26;
+}
+.sig-layer-c {
+  fill: none;
+  stroke: rgba(62, 230, 255, 0.55);
+  stroke-width: 1;
+}
+.sig-rib {
+  fill: none;
+  stroke: rgba(108, 193, 230, 0.28);
+  stroke-width: 1;
+}
+
+/* almost-imperceptible breathing (Phase 1 idle) */
+.sig-breathe {
+  transform-origin: 176px 210px;
+  animation: sig-breathe 8s ease-in-out infinite;
+}
+@keyframes sig-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.006);
+  }
+}
+
+/* internal light source */
+.sig-light-core {
+  fill: #3ee6ff;
+  animation: sig-pulse 3.4s ease-in-out infinite;
+}
+.sig-light-halo {
+  fill: none;
+  stroke: rgba(62, 230, 255, 0.5);
+  stroke-width: 1;
+  animation: sig-pulse 3.4s ease-in-out 0.5s infinite;
+}
+@keyframes sig-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* secondary fragments — subtle independent float */
+.sig-frag {
+  fill: none;
+  stroke-width: 1;
+  transition: opacity 0.5s ease;
+}
+.sig-frag-a {
+  stroke: #3ee6ff;
+  animation: sig-float-a 7.5s ease-in-out infinite alternate;
+}
+.sig-frag-b {
+  stroke: #8b9bff;
+  animation: sig-float-b 9.5s ease-in-out infinite alternate;
+}
+.sig-frag-c {
+  stroke: #9fd4f5;
+  animation: sig-float-c 8.5s ease-in-out infinite alternate;
+}
+@keyframes sig-float-a {
+  from {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(4px);
+  }
+}
+@keyframes sig-float-b {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+@keyframes sig-float-c {
+  from {
+    transform: translateY(-2px);
+  }
+  to {
+    transform: translateY(3px);
+  }
+}
+
+/* connecting lines — slow data flow */
+.sig-connect {
+  fill: none;
+  stroke: rgba(139, 155, 255, 0.4);
+  stroke-width: 1;
+  stroke-dasharray: 3 7;
+  opacity: 0.3;
+  animation: sig-flow 7s linear infinite;
+}
+@keyframes sig-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* occasional render scan */
+.sig-scan {
+  fill: url(#sig-scan-grad);
+  animation: sig-scan 9s ease-in-out infinite;
+}
+@keyframes sig-scan {
+  0% {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  45% {
+    opacity: 0.5;
+  }
+  60% {
+    transform: translateY(260px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(260px);
+    opacity: 0;
+  }
+}
+
+/* vertex points + technical markers + readout */
+.sig-vertex {
+  fill: #3ee6ff;
+  opacity: 0.6;
+}
+.sig-marker {
+  fill: none;
+  stroke: rgba(108, 193, 230, 0.4);
+  stroke-width: 1;
+}
+.sig-label {
+  fill: var(--color-ink-4);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+.sig-cursor {
+  fill: #3ee6ff;
+  animation: boot-blink 1s steps(1) infinite;
+}
+
+/* tablet / mobile — reduce geometry, keep composition subtle */
+@media (max-width: 1023px) {
+  .sig-atmo,
+  .sig-axis {
+    display: none;
+  }
+  .sig-wrap {
+    opacity: 0.75;
+  }
 }
 
 /* ---------- keyframes ---------- */

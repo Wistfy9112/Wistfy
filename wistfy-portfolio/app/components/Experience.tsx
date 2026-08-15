@@ -7,6 +7,7 @@ import BootSequence from '@/app/components/system/BootSequence'
 import CustomCursor from '@/app/components/system/CustomCursor'
 import SystemLog from '@/app/components/system/SystemLog'
 import { HudTop, HudRail, useActiveModule } from '@/app/components/system/Hud'
+import PassiveMotionInit from '@/app/components/system/PassiveMotionInit'
 import MobileNav from '@/app/components/system/MobileNav'
 import Scanlines from '@/app/components/system/Scanlines'
 import EasterEggs from '@/app/components/system/EasterEggs'
@@ -33,6 +34,7 @@ export default function Experience() {
       <Scanlines />
       <CustomCursor />
       <EasterEggs />
+      <PassiveMotionInit />
 
       {!booted && <BootSequence />}
 
@@ -42,7 +44,7 @@ export default function Experience() {
       <MobileNav />
       <SystemLog />
 
-      <main className="relative z-10">
+      <main className="content-scrim relative z-10">
         <Hero />
         <ProjectGrid />
         <About />

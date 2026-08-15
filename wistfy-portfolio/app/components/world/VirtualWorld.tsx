@@ -5,6 +5,18 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useSystem } from '@/app/system/SystemProvider'
 import { projects } from '@/app/data/projects'
+import { getPassive } from '@/app/system/passive'
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
+
+/* per-section atmosphere — internal state, changes are very subtle */
+const SECTION_FACTOR: Record<string, number> = {
+  hero: 0.85,
+  about: 0.95,
+  projects: 1,
+  skills: 1,
+  contact: 0.9,
+}
 
 /* ------------------------------------------------------------------ */
 /* Grid texture                                                        */
@@ -42,9 +54,12 @@ function GridFloor() {
   const ref = useRef<THREE.Mesh>(null!)
 
   useFrame((state) => {
+    const p = getPassive()
     const t = state.clock.elapsedTime
     const mat = ref.current.material as THREE.MeshBasicMaterial
-    mat.opacity = 0.24 + Math.sin(t * 0.35) * 0.04
+    const enter = Math.max(0, 1 - (performance.now() - p.sectionEnteredAt) / 700) * 0.04
+    mat.opacity =
+      0.1 * (1 + Math.sin(t * 0.35) * 0.25) * (1 + p.scrollActive * 0.3) + enter
     mat.map!.offset.y = (t * 0.02) % 1
   })
 
@@ -54,7 +69,7 @@ function GridFloor() {
       <meshBasicMaterial
         map={makeGridTexture()}
         transparent
-        opacity={0.24}
+        opacity={0.1}
         depthWrite={false}
         side={THREE.DoubleSide}
       />
@@ -99,16 +114,29 @@ function Tower({
   const baseScale = data.scale
 
   useFrame((state) => {
+    const p = getPassive()
     const t = state.clock.elapsedTime
-    ref.current.rotation.y = t * data.speed
+
+    const speedMul = 1 + p.cursorActive * 0.35
+    ref.current.rotation.y = t * data.speed * speedMul
     ref.current.rotation.x = Math.sin(t * data.speed * 0.7) * 0.2
     if (!reduced) {
       ref.current.position.y = data.pos[1] + Math.sin(t * data.speed + data.pos[0]) * 0.12
     }
-    const target = focused ? baseScale * 1.35 : baseScale
+
+    // section transition pulse (brief assemble on section enter)
+    const enter = Math.max(0, 1 - (performance.now() - p.sectionEnteredAt) / 700)
+    const target = focused ? baseScale * 1.2 : baseScale * (1 + enter * 0.06)
     ref.current.scale.setScalar(THREE.MathUtils.lerp(ref.current.scale.x, target, 0.08))
+
+    // dynamic light — towers on the cursor's side read slightly brighter
+    const facing = (data.pos[0] * p.cursorX + data.pos[1] * p.cursorY) * p.cursorActive
+    const light = clamp(1 + facing * 0.1, 0.55, 1.45)
+
     const mat = ref.current.material as THREE.MeshBasicMaterial
-    const targetOpacity = focused ? 0.95 : 0.5
+    const sectionFactor = SECTION_FACTOR[p.section ?? 'hero'] ?? 1
+    const base = focused ? 0.34 : 0.16
+    const targetOpacity = clamp((base * sectionFactor * light + enter * 0.08), 0.05, 0.5)
     mat.opacity = THREE.MathUtils.lerp(mat.opacity, targetOpacity, 0.08)
   })
 
@@ -124,7 +152,7 @@ function Tower({
         color: new THREE.Color('#3ee6ff'),
         wireframe: true,
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.16,
         depthWrite: false,
       }),
     []
@@ -164,7 +192,7 @@ function NetworkField({ reduced }: { reduced: boolean }) {
   const lineRef = useRef<THREE.LineSegments>(null!)
   const pointsRef = useRef<THREE.Points>(null!)
 
-  const { points, lineGeometry, lineColor } = useMemo(() => {
+  const { points, base, lineGeometry, lineColor } = useMemo(() => {
     const rand = mulberry32(0x5001)
     const pts = new Float32Array(NODE_COUNT * 3)
     for (let i = 0; i < NODE_COUNT; i++) {
@@ -189,30 +217,52 @@ function NetworkField({ reduced }: { reduced: boolean }) {
     const lineGeo = new THREE.BufferGeometry()
     lineGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(segs), 3))
     const lineColor = new THREE.Color('#8b9bff')
-    return { points: pts, lineGeometry: lineGeo, lineColor }
+    return { points: pts, base: new Float32Array(pts), lineGeometry: lineGeo, lineColor }
   }, [])
 
   useFrame((state) => {
     if (reduced) return
+    const p = getPassive()
     const t = state.clock.elapsedTime
-    if (pointsRef.current) {
-      const attr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute
-      const arr = attr.array as Float32Array
-      for (let i = 0; i < NODE_COUNT; i++) {
-        arr[i * 3 + 1] += Math.sin(t * 0.5 + i) * 0.001
+    const attr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute
+    const arr = attr.array as Float32Array
+    const fx = p.cursorX * 10
+    const fy = p.cursorY * 4
+    const fz = -12
+    const str = p.cursorActive * 1.1
+    for (let i = 0; i < NODE_COUNT; i++) {
+      const bx = base[i * 3]
+      const by = base[i * 3 + 1]
+      const bz = base[i * 3 + 2]
+      let x = bx
+      let y = by + Math.sin(t * 0.5 + i) * 0.4
+      let z = bz
+      const dx = x - fx
+      const dy = y - fy
+      const dz = z - fz
+      const d2 = dx * dx + dy * dy + dz * dz
+      if (d2 < 36 && d2 > 0.0001) {
+        const d = Math.sqrt(d2)
+        const f = (1 - d / 6) * str
+        x += (dx / d) * f
+        y += (dy / d) * f
+        z += (dz / d) * f
       }
-      attr.needsUpdate = true
+      arr[i * 3] = x
+      arr[i * 3 + 1] = y
+      arr[i * 3 + 2] = z
     }
+    attr.needsUpdate = true
     if (lineRef.current) {
       const mat = lineRef.current.material as THREE.LineBasicMaterial
-      mat.opacity = 0.25 + Math.sin(t * 0.8) * 0.1
+      mat.opacity = 0.1 + Math.sin(t * 0.8) * 0.03 + p.cursorActive * 0.04
     }
   })
 
   return (
     <group position={[0, 1, 0]}>
       <lineSegments ref={lineRef} geometry={lineGeometry}>
-        <lineBasicMaterial color={lineColor} transparent opacity={0.28} depthWrite={false} />
+        <lineBasicMaterial color={lineColor} transparent opacity={0.12} depthWrite={false} />
       </lineSegments>
       <points ref={pointsRef}>
         <bufferGeometry>
@@ -225,7 +275,7 @@ function NetworkField({ reduced }: { reduced: boolean }) {
           size={0.12}
           color="#3ee6ff"
           transparent
-          opacity={0.7}
+          opacity={0.32}
           sizeAttenuation
           depthWrite={false}
         />
@@ -240,7 +290,7 @@ function NetworkField({ reduced }: { reduced: boolean }) {
 function ParticleField({ count, reduced }: { count: number; reduced: boolean }) {
   const ref = useRef<THREE.Points>(null!)
 
-  const positions = useMemo(() => {
+  const { positions, base } = useMemo(() => {
     const rand = mulberry32(0x51a7)
     const arr = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
@@ -248,21 +298,46 @@ function ParticleField({ count, reduced }: { count: number; reduced: boolean }) 
       arr[i * 3 + 1] = (rand() - 0.5) * 24
       arr[i * 3 + 2] = (rand() - 0.5) * 40 - 8
     }
-    return arr
+    return { positions: arr, base: new Float32Array(arr) }
   }, [count])
 
   useFrame((state) => {
     if (reduced) return
+    const p = getPassive()
     const attr = ref.current.geometry.attributes.position as THREE.BufferAttribute
     const arr = attr.array as Float32Array
     const t = state.clock.elapsedTime
+    const fx = p.cursorX * 10
+    const fy = p.cursorY * 4
+    const fz = -12
+    const str = p.cursorActive * 1.6
     for (let i = 0; i < count; i++) {
-      arr[i * 3 + 1] += Math.sin(t * 0.3 + i) * 0.004
-      arr[i * 3 + 2] += 0.01
-      if (arr[i * 3 + 2] > 22) arr[i * 3 + 2] = -28
+      const bx = base[i * 3]
+      const by = base[i * 3 + 1]
+      const bz = base[i * 3 + 2]
+      // deterministic drift (no per-frame accumulation)
+      const y = by + Math.sin(t * 0.3 + i) * 0.5
+      const z = (((bz + 28) + t * 0.9) % 50 + 50) % 50 - 28
+      // cursor field — nearby particles separate subtly
+      const dx = bx - fx
+      const dy = y - fy
+      const dz = z - fz
+      const d2 = dx * dx + dy * dy + dz * dz
+      if (d2 < 49 && d2 > 0.0001) {
+        const d = Math.sqrt(d2)
+        const f = (1 - d / 7) * str
+        arr[i * 3] = bx + (dx / d) * f
+        arr[i * 3 + 1] = y + (dy / d) * f
+        arr[i * 3 + 2] = z + (dz / d) * f
+      } else {
+        arr[i * 3] = bx
+        arr[i * 3 + 1] = y
+        arr[i * 3 + 2] = z
+      }
     }
     attr.needsUpdate = true
-    ;(ref.current.material as THREE.PointsMaterial).opacity = 0.5 + Math.sin(t) * 0.1
+    ;(ref.current.material as THREE.PointsMaterial).opacity =
+      0.22 + Math.sin(t) * 0.06 + p.cursorActive * 0.05
   })
 
   return (
@@ -274,7 +349,7 @@ function ParticleField({ count, reduced }: { count: number; reduced: boolean }) 
         size={0.05}
         color="#9fd4f5"
         transparent
-        opacity={0.5}
+        opacity={0.22}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}
@@ -303,8 +378,8 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
   const focusedTower = focusedIndex >= 0 ? TOWER_LAYOUT[focusedIndex] : null
 
   useFrame((state) => {
+    const p = getPassive()
     if (reduced) return
-    const { pointer } = state
 
     if (focusedTower) {
       focusPos.current = new THREE.Vector3(
@@ -316,8 +391,15 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
       focusPos.current = null
     }
 
-    const targetX = focusPos.current ? focusPos.current.x + pointer.x * 0.6 : pointer.x * 0.8
-    const targetY = focusPos.current ? focusPos.current.y + pointer.y * 0.35 : pointer.y * 0.5
+    const cx = p.cursorX
+    const cy = p.cursorY
+    // scroll velocity nudges depth slightly — never the content
+    const scrollShift = clamp(p.scrollVel * -0.0008, -0.5, 0.5)
+
+    const targetX = focusPos.current ? focusPos.current.x + cx * 0.5 : cx * 0.9
+    const targetY = focusPos.current
+      ? focusPos.current.y + cy * 0.3
+      : cy * 0.5 + scrollShift
     cameraPos.current.x += (targetX - cameraPos.current.x) * 0.05
     cameraPos.current.y += (targetY - cameraPos.current.y) * 0.05
     state.camera.position.x = cameraPos.current.x
@@ -331,7 +413,7 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
       : new THREE.Vector3(cameraPos.current.x * 0.5, cameraPos.current.y * 0.3, -12)
     state.camera.lookAt(lookTarget)
     if (group.current) {
-      group.current.rotation.y = focusPos.current ? 0.06 : pointer.x * 0.03
+      group.current.rotation.y = focusPos.current ? 0.06 : cx * 0.03
     }
   })
 
@@ -342,7 +424,7 @@ function Scene({ reduced, touch }: { reduced: boolean; touch: boolean }) {
         <Tower key={i} data={t} reduced={reduced} focused={focusedIndex === i} />
       ))}
       <NetworkField reduced={reduced || touch} />
-      <ParticleField count={touch ? 300 : 900} reduced={reduced} />
+      <ParticleField count={touch ? 150 : 320} reduced={reduced} />
       <fog attach="fog" args={['#030509', 8, 40]} />
     </group>
   )
@@ -361,7 +443,7 @@ export default function VirtualWorld() {
       style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, #05070a, #030509 70%)' }}
     >
       {gpuMode === 'FALLBACK' ? (
-        <div className="tech-grid absolute inset-0 opacity-60" />
+        <div className="tech-grid absolute inset-0 opacity-30" />
       ) : (
         <Canvas
           camera={{ position: [0, 0, 6], fov: 55, near: 0.1, far: 80 }}

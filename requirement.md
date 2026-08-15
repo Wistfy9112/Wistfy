@@ -1,1166 +1,787 @@
-# WISTFY — Interactive Virtual Portfolio
+# WISTFY — SYSTEM MODULES VISUAL REFINEMENT
+
 
 ## ROLE
 
-You are a senior creative developer, UI/UX designer, motion designer, and graphics programmer.
 
-Your task is to design and implement a highly immersive personal portfolio website for **WISTFY**.
+Act as a senior:
 
-The portfolio should be inspired by the atmosphere, visual language, and virtual-computer aesthetic of **Code Lyoko**, especially:
 
-* Virtual worlds
-* Supercomputer interfaces
-* HUD systems
-* Digital maps
-* System terminals
-* Scanning effects
-* Virtualization
-* Network visualization
-* Futuristic technical interfaces
-* 3D environments
+- UI/UX Designer
+- Creative Technologist
+- Motion Designer
+- Graphics Programmer
+- Frontend Engineer
 
-IMPORTANT:
 
-Do NOT create a fan website.
+You are improving an existing WISTFY portfolio.
 
-Do NOT directly copy Code Lyoko's copyrighted UI, logos, characters, assets, dialogue, or exact visual designs.
 
-Instead, create an original visual identity that evokes the feeling of entering a mysterious virtual computer system.
+The current "System Modules" section has a strong futuristic identity, but the background is visually competing with the content.
 
-The final website should feel like:
 
-> "A portfolio that behaves like a virtual system, not a normal website."
+The goal is NOT to remove the graphics.
+
+
+The goal is to make the graphics:
+
+
+> visually distinctive, intentional, and memorable — while keeping the content easy to read.
+
 
 ---
 
-# 1. CORE CONCEPT
 
-The website represents the personal computer system of WISTFY.
+# 1. CORE DESIGN PRINCIPLE
 
-The visitor is not simply browsing a portfolio.
 
-They are:
+The most important rule:
 
-1. Connecting to the system
-2. Initializing the virtual environment
-3. Entering the WISTFY virtual world
-4. Exploring projects
-5. Inspecting technical information
-6. Returning to the main system
 
-The central concept is:
+> GRAPHICS SHOULD SUPPORT THE CONTENT, NOT COMPETE WITH IT.
+
+
+The current section contains large wireframe objects behind the title and description.
+
+
+They currently attract too much attention.
+
+
+Reduce their dominance while making the remaining visual element more meaningful.
+
+
+The final composition should have:
+
 
 ```text
-REAL WORLD
-     ↓
-SYSTEM CONNECTION
-     ↓
-VIRTUALIZATION
-     ↓
-WISTFY VIRTUAL WORLD
-     ↓
-PROJECTS / ABOUT / SKILLS / CONTACT
-```
+CONTENT
+████████████████████
 
-Use this concept throughout the UX.
 
----
+VISUAL SIGNATURE
+       ↓
+   subtle but memorable
 
-# 2. PERSONAL BRAND
 
-Name:
+BACKGROUND
+       ↓
+   atmospheric
+
+NOT:
+
+BACKGROUND
+████████████████████
+
+
+CONTENT
+       ↓
+hard to read
+2. DO NOT USE A GENERIC SCI-FI BACKGROUND
+
+This is extremely important.
+
+Do NOT create a background that looks like:
+
+Generic cyberpunk website
+Generic AI website
+Generic SaaS dashboard
+Generic hacker interface
+Generic futuristic template
+Generic HUD
+Generic neon grid
+Generic Three.js landing page
+Stock "futuristic technology" design
+Common portfolio template found online
+
+Avoid visual clichés such as:
+
+Excessive hexagons
+Random glowing dots
+Random circuit lines
+Generic holographic circles
+Excessive neon
+Giant glowing grids
+Random floating geometric shapes
+Excessive glitch effects
+Excessive scanlines
+Generic particle backgrounds
+
+The visual identity must feel like:
 
 WISTFY
 
-Primary identity:
+and not:
 
-* Graphics Programmer
-* Software Engineer
-* Creative Technologist
+"another futuristic developer portfolio."
 
-Focus:
+3. CREATE A UNIQUE VISUAL SIGNATURE
 
-* OpenGL
-* C++
-* Graphics Programming
-* GLSL
-* Rendering
-* Software Engineering
-* Python
-* Web Development
-* Interactive Systems
-* Experimental Technology
+The section needs ONE recognizable visual signature.
 
-The design should communicate:
+Do not use many competing visual elements.
 
-* Technical ability
-* Curiosity
-* Engineering
-* Creativity
-* Precision
-* Experimental thinking
+Create a custom abstract graphical element that feels like:
 
-Avoid making the website look like a generic developer portfolio.
+A digital core
+A fragmented rendering structure
+A virtual coordinate object
+A computational artifact
+A geometric data structure
+A rendered object being constructed
+A system module being initialized
 
----
+The exact visual form should be ORIGINAL.
 
-# 3. VISUAL DIRECTION
+Do not directly copy existing sci-fi interfaces.
 
-Use a dark futuristic technical interface.
+Think of it as a visual metaphor for:
 
-Base:
+"A system module being rendered in real time."
 
-```text
-Background:
-#030509
-#05070A
-#080C12
-```
+4. SIGNATURE ELEMENT
 
-Primary accent:
+Create one primary visual focal point.
 
-```text
-Electric Cyan
-```
+Suggested concept:
 
-Secondary accent:
+A custom fragmented wireframe / geometric core.
 
-```text
-Violet / Blue
-```
+It should consist of:
 
-Use accent colors sparingly.
+1 main geometric structure
+2–4 secondary fragments
+Very subtle connecting lines
+A small internal light source
+Very subtle depth
+A few technical markers
 
-The site should NOT become a generic neon gaming website.
-
-Target visual balance:
-
-```text
-90% sophisticated technical interface
-10% futuristic virtual-world aesthetic
-```
-
-The design should feel:
-
-* Minimal
-* Cinematic
-* Technical
-* Mysterious
-* Precise
-* Premium
+The structure should NOT look like a generic sphere.
 
 Avoid:
 
-* Excessive glow
-* Excessive gradients
-* Excessive glassmorphism
-* Generic cyberpunk aesthetics
-* Excessive rounded cards
-* Template-like layouts
+generic glowing sphere
+generic hologram
+generic planet
+generic wireframe cube
+generic AI brain
 
----
+Instead, create an asymmetric computational object.
 
-# 4. TYPOGRAPHY
+It should look like something that could belong exclusively to WISTFY.
 
-Use a combination of:
+5. COMPOSITION
 
-Primary:
+The section should have a clear visual hierarchy.
 
-```text
-Inter
-IBM Plex Sans
-Space Grotesk
-```
+Use an asymmetrical composition.
 
-Technical:
+Recommended:
 
-```text
-JetBrains Mono
-IBM Plex Mono
-```
+┌──────────────────────────────────────────────────────┐
+│                                                      │
+│ MODULE_03                                            │
+│                                                      │
+│ System Modules                    [SIGNATURE CORE]   │
+│                                                      │
+│ Skills represented as loaded       visual object    │
+│ system modules.                                    │
+│                                                      │
+│ Expand a module to inspect                          │
+│ its registered capabilities.                        │
+│                                                      │
+└──────────────────────────────────────────────────────┘
 
-Use monospace typography for:
+The left side should be the primary reading area.
 
-* System logs
-* Technical metadata
-* Project IDs
-* Status indicators
-* Coordinates
-* Navigation labels
+The right side should contain the main visual signature.
 
-Use modern sans-serif typography for:
+6. TEXT SAFE ZONE
 
-* Headings
-* Descriptions
-* Personal branding
+This is critical.
 
-Typography should be one of the strongest design elements.
+Reserve approximately:
 
----
+55–60% of the section width for content.
 
-# 5. ENTRY EXPERIENCE
+The left content area must remain visually quiet.
 
-The website should begin with a system boot sequence.
+Do NOT place:
 
-Example:
+Large wireframes
+Bright lines
+Dense particles
+Strong glow
+High contrast geometry
 
-```text
-WISTFY SYSTEM
---------------------------------
+directly behind the text.
 
-INITIALIZING CORE...
+The title must remain readable even when the visual effects are active.
 
-GRAPHICS MODULE       ONLINE
-RENDERING ENGINE      ONLINE
-PROJECT DATABASE      ONLINE
-VIRTUAL ENVIRONMENT   ONLINE
+7. VISUAL WEIGHT
 
-SYSTEM CHECK          COMPLETE
+The visual hierarchy should be:
 
-> ACCESS GRANTED
+LEVEL 1
 
-ENTER VIRTUAL ENVIRONMENT
-```
+Section title
 
-Create a short cinematic transition.
+System Modules
+LEVEL 2
 
-Requirements:
+Description
 
-* Do not make the boot sequence annoying.
-* Allow the user to skip it.
-* Store a session/local state so returning visitors don't have to repeatedly watch the full animation.
-* The animation should be approximately 2–4 seconds.
-* Respect `prefers-reduced-motion`.
+Skills represented as loaded system modules.
+Expand a module to inspect its registered capabilities.
+LEVEL 3
 
-After initialization, transition into the main environment.
+Interactive module content
 
----
+LEVEL 4
 
-# 6. MAIN INTERFACE
+Visual signature
 
-The homepage should resemble an original virtual control system.
+LEVEL 5
 
-Do NOT create a traditional navbar.
+Background atmosphere
 
-Instead create a modular HUD.
+The background must NEVER become Level 1.
 
-Possible modules:
+8. BACKGROUND TREATMENT
 
-```text
-PROJECTS
-ABOUT
-SKILLS
-SYSTEM
-CONTACT
-```
+Do not remove the futuristic atmosphere.
 
-The navigation should feel like system modules rather than webpage links.
+Instead, reduce it.
 
-Example:
+Use multiple subtle layers:
 
-```text
-┌─────────────────────────────────────────────┐
-│ WISTFY SYSTEM                     SYS: 001  │
-│                                             │
-│                                             │
-│               W I S T F Y                   │
-│                                             │
-│        GRAPHICS PROGRAMMER                  │
-│        SOFTWARE ENGINEER                   │
-│                                             │
-│        [ ENTER SYSTEM ]                    │
-│                                             │
-│                                             │
-│ PROJECTS       ABOUT       SYSTEM           │
-└─────────────────────────────────────────────┘
-```
+Layer 1 — Base
 
----
+Very dark background.
 
-# 7. HERO SECTION
+Almost black with a slight blue/cyan undertone.
 
-The hero must immediately establish the identity.
+Layer 2 — Atmospheric gradient
+
+Extremely subtle radial or directional gradient.
+
+Opacity:
+
+approximately 3–8%.
+
+Layer 3 — Technical structure
+
+Very subtle grid or coordinate lines.
+
+Opacity:
+
+approximately 3–6%.
+
+Layer 4 — Sparse particles
+
+Very few particles.
+
+Particles should be:
+
+small
+slow
+sparse
+low contrast
+Layer 5 — Signature geometry
+
+The main visual object.
+
+This is the strongest background element.
+
+Layer 6 — Vignette
+
+Subtle vignette that naturally directs attention toward the content.
+
+9. WIREFRAME GEOMETRY
+
+The existing wireframe geometry can be reused, but do not simply place multiple objects randomly.
+
+Currently there are several large wireframe shapes competing with the title.
+
+Reduce them.
 
 Use:
 
-```text
-WISTFY
+ONE PRIMARY STRUCTURE + A FEW SECONDARY FRAGMENTS.
 
-GRAPHICS PROGRAMMER
-SOFTWARE ENGINEER
-```
+Recommended:
 
-Supporting statement:
-
-```text
-Building systems, rendering experiences,
-and turning ideas into interactive worlds.
-```
-
-Add a subtle animated technical background.
-
-Possible elements:
-
-* Grid
-* Coordinates
-* Particles
-* Network nodes
-* Scan lines
-* Wireframe geometry
-* Data streams
-* Subtle noise
-* Orbiting points
-* Technical markers
-
-Do NOT overcrowd the hero.
-
----
-
-# 8. VIRTUAL WORLD
-
-This is the most important visual feature.
-
-Create an interactive virtual environment inspired by the idea of a digital world.
-
-The environment can contain:
-
-* Floating geometry
-* Wireframe structures
-* Digital terrain
-* Grid
-* Particles
-* Nodes
-* Connection lines
-* Abstract towers
-* Portals
-* Data streams
-
-Do not directly recreate Code Lyoko environments.
-
-Create an original world.
-
-The user should be able to interact with it using:
-
-* Mouse movement
-* Cursor
-* Scroll
-* Drag
-* Click
-
-The environment should respond subtly to the user's actions.
-
----
-
-# 9. PROJECT MAP
-
-Projects should be represented as locations/modules inside the virtual world.
-
-Do NOT simply display:
-
-```text
-Project Card
-Project Card
-Project Card
-```
-
-Instead create a digital map.
-
-Example:
-
-```text
-                PROJECT 01
-                    ●
+                fragment
                    /
                   /
-       PROJECT 02 ●────────● PROJECT 03
-                  |
-                  |
-                  ●
-                PROJECT 04
-```
+        ┌────────────────┐
+        │                │
+        │   CORE         │
+        │                │
+        └────────────────┘
+             \
+              \
+             fragment
 
-Each project node should be interactive.
+The geometry should have depth.
 
-Hover:
+Use:
 
-* Node becomes active
-* Information appears
-* Environment reacts
+transparency
+thin lines
+subtle blur
+depth fading
 
-Click:
+Avoid making every edge equally visible.
 
-* Camera moves toward the node
-* Project interface opens
-* Background environment changes subtly
+10. DEPTH
 
----
+Create depth using opacity rather than excessive brightness.
 
-# 10. PROJECT STRUCTURE
+Foreground:
 
-Create project categories inspired by virtual sectors.
+strongest
 
-Example:
+Midground:
 
-### SECTOR 01 — GRAPHICS
+medium
 
-Projects:
+Background:
 
-* OpenGL Renderer
-* Rendering Engine
-* Shader Experiments
-* Computer Graphics Research
-
-### SECTOR 02 — SYSTEMS
-
-Projects:
-
-* C++ Systems
-* Algorithms
-* Performance Experiments
-* Tools
-
-### SECTOR 03 — INTELLIGENCE
-
-Projects:
-
-* Machine Learning
-* Stock Auto Trading
-* Data Analysis
-* Prediction Experiments
-
-### SECTOR 04 — WEB
-
-Projects:
-
-* Financial Management
-* Flask Applications
-* React Applications
-* Interactive Websites
-
-The sector names and project names should remain editable through configuration/data files.
-
----
-
-# 11. PROJECT DETAIL VIEW
-
-When the user selects a project, transition into a technical project interface.
-
-Example:
-
-```text
-WISTFY SYSTEM
-/
-PROJECT DATABASE
-/
-PROJECT_001
-
-----------------------------------------
-
-REAL-TIME RENDERING ENGINE
-
-STATUS       COMPLETED
-CATEGORY     GRAPHICS
-LANGUAGE     C++
-API          OPENGL
-SHADERS      GLSL
-
-----------------------------------------
-
-DESCRIPTION
-
-A real-time rendering system focused on
-understanding graphics pipelines, rendering
-architecture and GPU programming.
-
-----------------------------------------
-
-TECHNOLOGIES
-
-C++
-OpenGL
-GLSL
-GLM
-CMake
-
-----------------------------------------
-
-[ LIVE DEMO ]
-[ SOURCE ]
-[ SYSTEM LOG ]
-```
-
-Include:
-
-* Project screenshots
-* Interactive demo when possible
-* Technical explanation
-* Architecture
-* Challenges
-* Solutions
-* Technologies
-* GitHub link
-* Demo link
-
----
-
-# 12. OPENGL PROJECT SHOWCASE
-
-For graphics-related projects, prioritize visual demonstrations.
-
-Instead of only screenshots, create:
-
-* WebGL/WebGPU preview
-* Shader visualization
-* Interactive 3D model
-* Particle simulation
-* Lighting demonstration
-* Wireframe mode
-* Debug overlays
-
-Example controls:
-
-```text
-[ W ] Wireframe
-[ L ] Lighting
-[ P ] Particles
-[ R ] Reset
-```
-
-Display technical information as HUD overlays.
-
-This section should demonstrate actual graphics knowledge.
-
----
-
-# 13. ABOUT SECTION
-
-Do not create a generic "About Me" section.
-
-Instead present it as:
-
-```text
-SYSTEM PROFILE
-
-USER: WISTFY
-
-ROLE:
-Graphics Programmer
-Software Engineer
-
-INTERESTS:
-Real-time Rendering
-Computer Graphics
-Systems
-Interactive Technology
-Software Architecture
-```
-
-Then include a short personal description.
-
-Keep it human.
-
-The technical interface should not completely hide the person behind the portfolio.
-
----
-
-# 14. SKILLS
-
-Represent skills as system modules rather than percentage bars.
-
-Avoid:
-
-```text
-C++ █████████ 90%
-Python ████████ 80%
-```
-
-Instead:
-
-```text
-GRAPHICS ENGINE
-├── OpenGL
-├── GLSL
-├── Rendering
-├── Shaders
-└── GPU Programming
-
-SOFTWARE ENGINEERING
-├── C++
-├── Python
-├── C#
-├── Architecture
-└── Performance
-
-WEB SYSTEMS
-├── React
-├── Flask
-├── .NET
-├── PostgreSQL
-└── REST APIs
-```
-
-Allow the user to expand/collapse modules.
-
----
-
-# 15. SYSTEM LOG
-
-Create a small live system log.
-
-Example:
-
-```text
-[15:32:01] User connected
-[15:32:02] Virtual environment initialized
-[15:32:04] Project database loaded
-[15:32:07] Graphics subsystem ready
-```
-
-The messages can change based on user interaction.
+very subtle
 
 For example:
 
-```text
-[15:34:21] Project_001 selected
-[15:34:22] Loading rendering engine...
-[15:34:23] Shader subsystem initialized
-```
+PRIMARY CORE       30–45%
+SECONDARY OBJECTS  10–20%
+BACKGROUND LINES    3–8%
+PARTICLES           5–10%
 
-This should be subtle and not distract from the content.
+These values are guidelines, not absolute requirements.
 
----
+The result should feel layered.
 
-# 16. CURSOR INTERACTION
+11. THE SIGNATURE OBJECT SHOULD NOT BE STATIC
 
-Create a custom cursor.
+Give the main visual object very subtle motion.
 
-Possible states:
+Possible motion:
 
-Normal:
+slow rotation
+slight internal deformation
+small floating fragments
+subtle light movement
+occasional scan
+tiny coordinate shifts
 
-```text
-+
-```
+Animation speed must be slow.
 
-Hover interactive object:
+The user should notice:
 
-```text
-[ + ]
-```
+"something is alive"
 
-Loading:
+rather than:
 
-```text
-◌
-```
+"the background is constantly moving."
 
-Interactive 3D object:
+Avoid aggressive animation.
 
-```text
-crosshair + coordinate indicator
-```
+12. INTERACTION
 
-The cursor should interact with the environment.
+The background may respond subtly to the user.
 
-Keep it performant.
+For example:
 
-Disable or simplify custom cursor behavior on mobile.
+Mouse movement
+      ↓
+very small parallax
+      ↓
+signature object shifts 4–10px
 
----
+Hovering an actual module may:
 
-# 17. TRANSITIONS
+module hover
+      ↓
+signature object reacts
+      ↓
+one fragment becomes slightly brighter
 
-Use cinematic transitions.
+This creates a relationship between the content and the graphics.
 
-Examples:
+The graphics should not be purely decorative.
 
-* Digital scan
-* Horizontal wipe
-* Grid displacement
-* Particle dissolve
-* Camera movement
-* Data loading
-* Virtualization effect
+13. GRAPHICS PROGRAMMER IDENTITY
 
-Do not use random animations everywhere.
+Because WISTFY is a graphics programmer portfolio, the visual should subtly communicate:
 
-Every animation should communicate:
+Rendering
+Geometry
+Coordinate systems
+Shaders
+GPU computation
+3D space
+Technical visualization
 
-```text
-loading
-navigation
-selection
-system state
-```
+But do NOT simply display:
 
----
-
-# 18. SOUND
-
-Sound should be optional.
-
-DO NOT autoplay audio.
-
-If implemented, provide:
-
-```text
-SOUND: OFF
-```
-
-and allow users to enable it.
-
-Possible sounds:
-
-* UI click
-* System initialization
-* Soft digital hum
-* Project selection
-* Data loading
-
-Keep sound extremely subtle.
-
----
-
-# 19. RESPONSIVE DESIGN
-
-The desktop version can provide the full virtual experience.
-
-Mobile should not attempt to reproduce every 3D effect.
-
-Mobile should prioritize:
-
-* Readability
-* Navigation
-* Project information
-* Performance
-
-Create a simplified mobile environment.
-
-Example:
-
-Desktop:
-
-```text
-Interactive 3D Virtual World
-```
-
-Mobile:
-
-```text
-Interactive 2D System Map
-```
-
----
-
-# 20. PERFORMANCE
-
-Performance is extremely important.
-
-Target:
-
-```text
-60 FPS desktop
-30+ FPS mobile
-```
-
-Requirements:
-
-* Lazy-load heavy assets
-* Lazy-load 3D scenes
-* Avoid unnecessary WebGL rendering
-* Use requestAnimationFrame correctly
-* Dispose geometries/materials/textures
-* Avoid memory leaks
-* Avoid excessive DOM animation
-* Use GPU-friendly effects
-* Reduce particle count on mobile
-* Respect reduced motion
-
-The portfolio itself should demonstrate engineering quality.
-
----
-
-# 21. ACCESSIBILITY
-
-Implement:
-
-* Keyboard navigation
-* Semantic HTML
-* Focus states
-* ARIA labels where necessary
-* Reduced motion
-* Sufficient contrast
-* Screen-reader friendly project content
-
-Do not sacrifice usability for visual effects.
-
----
-
-# 22. ARCHITECTURE
-
-Use a clean component architecture.
-
-Suggested structure:
-
-```text
-src/
-├── components/
-│   ├── system/
-│   ├── navigation/
-│   ├── hero/
-│   ├── projects/
-│   ├── world/
-│   ├── about/
-│   ├── skills/
-│   └── contact/
-│
-├── scenes/
-│   ├── VirtualWorld/
-│   ├── ProjectMap/
-│   └── Effects/
-│
-├── data/
-│   └── projects.ts
-│
-├── hooks/
-│
-├── shaders/
-│
-├── utils/
-│
-└── styles/
-```
-
-Keep content separate from presentation.
-
-Projects should be data-driven.
-
----
-
-# 23. TECHNOLOGY
-
-Preferred stack:
-
-```text
-React
-TypeScript
-Vite
-Three.js / React Three Fiber
+OPENGL
 GLSL
-GSAP or Framer Motion
-```
+GPU
+C++
 
-Use Tailwind CSS only if it improves development speed without making the design generic.
+everywhere.
 
-Do not blindly install libraries.
+Communicate the concept visually.
 
-Use the minimum necessary dependencies.
+For example:
 
----
+coordinate markers
+wireframe topology
+rendering layers
+vertex-like points
+subtle axis indicators
+fragment structures
+technical measurement lines
 
-# 24. VISUAL HIERARCHY
+Use these sparingly.
 
-The site must remain understandable.
+14. ORIGINALITY REQUIREMENT
 
-Priority:
+The design must NOT resemble common examples from:
 
-```text
-1. WISTFY identity
-2. Projects
-3. Technical expertise
-4. Experience
-5. About
-6. Contact
-7. Decorative effects
-```
+Dribbble
+Behance
+Awwwards
+generic AI-generated websites
+Three.js templates
+Webflow templates
+GitHub portfolio templates
 
-Never allow effects to overpower content.
+Do not imitate a known website.
 
----
+Do not use a commonly seen composition.
 
-# 25. ORIGINALITY REQUIREMENT
+The visual identity should be derived from:
 
-The final website should feel inspired by:
+WISTFY
++
+Graphics Programming
++
+Virtual Systems
++
+Digital Geometry
++
+Minimal Technical Interface
 
-* Virtual computer systems
-* Early 2000s futuristic interfaces
-* Digital worlds
-* Sci-fi HUDs
-* Code Lyoko atmosphere
+Create a new visual language from those concepts.
 
-But it must have its own identity.
+15. CODE LYOKO INSPIRATION
+
+The portfolio can retain a subtle Code Lyoko atmosphere.
+
+However:
 
 Do NOT directly reproduce:
 
-* Code Lyoko logo
-* XANA logo
-* Lyoko sector maps
-* Characters
-* Character silhouettes
-* Exact UI panels
-* Exact typography
-* Exact color combinations
-* Copyrighted assets
-* Original dialogue
-* Original screenshots
+Code Lyoko UI
+Sector maps
+XANA interface
+Original characters
+Original symbols
+Original assets
+Original typography
+Exact environments
 
-The result should be:
+Use only the conceptual inspiration:
 
-```text
-Code Lyoko inspiration
-        +
-WISTFY identity
-        +
-OpenGL / Graphics identity
-        +
-Modern web design
-```
+virtual world
+digital space
+supercomputer
+system modules
+technical interfaces
+mysterious computational environment
 
----
+The result must feel like:
 
-# 26. EASTER EGGS
+WISTFY's own virtual system.
 
-Add subtle hidden interactions.
+16. COLOR SYSTEM
 
-Examples:
+Keep the existing dark/cyan identity.
 
-* Typing a secret keyboard sequence unlocks a debug mode.
-* Clicking a system indicator multiple times reveals developer information.
-* Idle mode triggers a mysterious system scan.
-* Opening the console reveals hidden system messages.
+Primary background:
 
-Keep these optional and subtle.
+#05070A
 
-The portfolio must still work perfectly without discovering them.
+Secondary dark:
 
----
+#081019
 
-# 27. CONTACT
+Technical surface:
 
-Create a final system connection screen.
+#0D1720
+
+Primary accent:
+
+#16D9E8
+
+Secondary accent:
+
+#6AA7C8
+
+Primary text:
+
+#E7F2FF
+
+Secondary text:
+
+#94A8B8
+
+Do NOT introduce many additional colors.
+
+The accent should be used selectively.
+
+17. TYPOGRAPHY
+
+The title must remain highly readable.
 
 Example:
 
-```text
-COMMUNICATION MODULE
+System Modules
 
-SYSTEM READY
+Use:
 
-Want to build something interesting?
+strong geometric sans-serif
+high weight
+generous spacing
 
-[ CONNECT ]
+Technical labels:
 
---------------------------------
+MODULE_03
+WISTFY // MODULE_03
+SYSTEM STATUS
 
-GitHub
-LinkedIn
-Email
-```
+Use monospace.
 
-The final screen should feel like ending a session rather than simply displaying a contact form.
+Body text:
 
----
+Use a highly readable sans-serif.
 
-# 28. FOOTER
+Do NOT use monospace for everything.
 
-Minimal:
+18. SECTION SPACING
 
-```text
-WISTFY SYSTEM
+The current screenshot feels compressed because the geometry overlaps the content vertically.
 
-GRAPHICS • SOFTWARE • EXPERIMENTS
+Increase the breathing room.
 
-SYSTEM STATUS: ONLINE
+Recommended:
 
-© 2026 WISTFY
-```
+MODULE LABEL
 
----
 
-# 29. DESIGN QUALITY BAR
+↓ 24–32px
 
-The website should look like it was designed by:
 
-```text
-Senior Product Designer
-+
-Creative Technologist
-+
-Graphics Programmer
-```
+TITLE
 
-Not:
 
-```text
-AI generated developer template
-```
+↓ 16–24px
 
-Avoid generic AI-generated patterns such as:
 
-* Huge gradient text
-* Random glowing blobs
-* Excessive glass cards
-* Generic purple/blue SaaS design
-* Unnecessary statistics
-* Skill percentage bars
-* Stock illustrations
-* Generic "Let's build the future" copy
-* Excessive rounded cards
+DESCRIPTION
 
-Every element must have a reason to exist.
 
----
+↓ 40–64px
 
-# 30. IMPLEMENTATION PROCESS
 
-Before writing code:
+MODULE CONTENT
 
-1. Analyze the complete design direction.
-2. Define the information architecture.
-3. Define the visual system.
-4. Define the animation system.
-5. Define the 3D world concept.
-6. Define reusable components.
-7. Create the project data model.
-8. Create the desktop layout.
-9. Create the mobile fallback.
-10. Implement the experience incrementally.
+The visual signature should have enough space to exist independently.
 
-Do NOT generate the entire project blindly in one pass.
+Do not let the wireframe touch the title.
 
-Build the system in stages.
+19. RESPONSIVE BEHAVIOR
 
----
+Desktop:
 
-# 31. DEVELOPMENT PHASES
+LEFT = CONTENT
+RIGHT = SIGNATURE GRAPHIC
 
-## PHASE 1
+Tablet:
 
-Create:
+CONTENT
+     ↓
+SIGNATURE GRAPHIC
 
-* Project setup
-* Global styles
-* Typography
-* Color system
-* Boot screen
-* Main navigation
-* Hero
+Mobile:
 
-## PHASE 2
+The graphic becomes a subtle decorative element.
 
-Create:
+Do not put large wireframe objects behind text.
 
-* Virtual world
-* Grid
-* Particles
-* Interactive nodes
-* Project map
+On mobile:
 
-## PHASE 3
+reduce geometry
+reduce particles
+reduce animation
+preserve text readability
+20. REDUCED MOTION
 
-Create:
+Respect:
 
-* Project detail interface
-* Project data
-* Technical information
-* Project demos
+prefers-reduced-motion
 
-## PHASE 4
+When enabled:
 
-Create:
+disable rotation
+disable parallax
+disable particle animation
+keep only static geometry
+preserve the composition
+21. PERFORMANCE
 
-* About
-* Skills
-* Contact
-* System logs
+Do not introduce expensive effects unnecessarily.
 
-## PHASE 5
+Avoid:
 
-Create:
+huge particle systems
+expensive post-processing
+multiple WebGL scenes
+unnecessary animation loops
+excessive blur
 
-* Mobile experience
-* Accessibility
-* Reduced motion
-* Performance optimization
+The background should remain lightweight.
 
-## PHASE 6
+The content must load first.
 
-Polish:
+22. IMPLEMENTATION STRATEGY
 
-* Animation timing
-* Transitions
-* Micro-interactions
-* Loading states
-* Error states
-* Visual consistency
+Before modifying the code:
 
----
+Inspect the current System Modules section.
+Identify the current background implementation.
+Identify existing wireframe objects.
+Identify animation logic.
+Identify whether the section uses CSS, SVG, Canvas, Three.js, or another renderer.
+Reuse existing infrastructure where possible.
+Do not rewrite unrelated components.
 
-# 32. IMPORTANT DEVELOPMENT RULE
+Only modify the components necessary for this visual refinement.
 
-Do not stop at making the website "functional".
+23. IMPORTANT — DO NOT SIMPLY LOWER OPACITY
 
-Continuously evaluate:
+Do NOT solve the problem by doing only this:
 
-> "Does this feel like entering a virtual system?"
+opacity: 0.2;
 
-If not, improve the interaction model.
+The issue is not only opacity.
 
-The goal is not merely to create a pretty portfolio.
+The issue is:
 
-The goal is to create an **experience**.
+composition + hierarchy + visual weight + positioning.
 
----
+Recompose the graphics.
 
-# 33. FINAL EXPERIENCE
+Move the primary visual signature toward the right.
 
-When a visitor opens the website, the intended emotional sequence should be:
+Create a clean text-safe area.
 
-```text
-CURIOUS
-   ↓
-"What is this?"
-   ↓
-SYSTEM INITIALIZATION
-   ↓
-"Interesting..."
-   ↓
-ENTER VIRTUAL WORLD
-   ↓
-"This is a portfolio?"
-   ↓
-PROJECT EXPLORATION
-   ↓
-"This person actually builds graphics systems."
-   ↓
-PROJECT DETAILS
-   ↓
-"Technically impressive."
-   ↓
-CONTACT
-   ↓
-"I want to know more."
-```
+Reduce competing shapes.
 
-The final result should be a portfolio that demonstrates the developer's technical ability **through the website itself**.
+Use depth.
 
----
+Then tune opacity.
 
-# FINAL REQUIREMENT
+24. VISUAL BALANCE
 
-Before considering the implementation complete, perform a complete UX review.
+The final composition should approximately feel like:
 
-Check:
+60% CONTENT
+40% GRAPHICS
 
-* Does the first 5 seconds communicate who WISTFY is?
-* Can a visitor find projects quickly?
-* Does the Code Lyoko-inspired concept feel original?
-* Does the site demonstrate graphics programming ability?
-* Does the 3D experience improve the portfolio instead of distracting from it?
-* Does it work without WebGL?
-* Does it work on mobile?
-* Does it remain performant?
-* Does it look professional enough for a technical portfolio?
-* Does it feel like a unique WISTFY product rather than an AI-generated template?
+But the graphics should occupy visual space without taking attention away from the content.
 
-If any answer is "no", fix it before declaring the project complete.
+Think:
+
+CONTENT
+████████████████████
+
+
+GRAPHICS
+          ██████████
+
+rather than:
+
+GRAPHICS
+████████████████████
+       CONTENT
+25. FINAL DESIGN TARGET
+
+The final "System Modules" section should feel:
+
+Original
+Premium
+Technical
+Calm
+Futuristic
+Spatial
+Memorable
+Easy to read
+
+It should communicate:
+
+"This is a graphics programmer's personal system."
+
+without becoming:
+
+"A generic sci-fi website."
+
+26. SUCCESS CRITERIA
+
+The implementation is successful when:
+
+The title can be read instantly.
+The description can be read without distraction.
+The background still feels visually rich.
+There is a clear focal graphic.
+The graphic feels unique to WISTFY.
+The geometry no longer looks randomly scattered.
+The composition feels intentional.
+The visual hierarchy is obvious.
+The section looks good without relying on excessive glow.
+The design does not resemble a common futuristic web template.
+The section remains performant.
+Mobile remains readable.
+FINAL INSTRUCTION
+
+Do NOT remove the personality of the existing design.
+
+Do NOT make it boring.
+
+Do NOT turn it into a plain white/black portfolio section.
+
+Do NOT simply reduce opacity.
+
+Instead:
+
+RECOMPOSE THE GRAPHICS.
+
+Create one strong, original visual signature.
+
+Move it away from the reading area.
+
+Reduce secondary geometry.
+
+Create depth.
+
+Use subtle motion.
+
+Make the background feel like a sophisticated computational environment.
+
+The final result should have a distinctive WISTFY identity:
+
+MINIMAL + GRAPHICS + VIRTUAL SYSTEM + ORIGINALITY
+
+The user should notice the graphic.
+
+But they should read the content first.

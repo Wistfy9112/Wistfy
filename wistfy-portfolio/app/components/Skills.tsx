@@ -6,10 +6,12 @@ import { SKILL_MODULES } from '@/app/data/system'
 import { useSystem } from '@/app/system/SystemProvider'
 import { sfx } from '@/app/utils/sound'
 import SectionShell from '@/app/components/system/SectionShell'
+import SkillsSignature from '@/app/components/SkillsSignature'
 
 export default function Skills() {
   const { soundOn, pushLog } = useSystem()
   const [open, setOpen] = useState<string[]>(['graphics-engine'])
+  const [hovered, setHovered] = useState(-1)
 
   const toggle = (id: string) => {
     if (soundOn) sfx.click()
@@ -20,23 +22,28 @@ export default function Skills() {
 
   return (
     <SectionShell id="module-skills" title="System Modules" code="MODULE_03">
-      <div className="mb-8">
-        <p className="max-w-xl text-sm leading-relaxed text-ink-2 md:text-base">
-          Skills represented as loaded system modules. Expand a module to inspect its registered
-          capabilities.
-        </p>
-      </div>
+      <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
+        {/* left — primary reading area */}
+        <div className="lg:col-span-7">
+          <div className="mb-10 md:mb-12">
+            <p className="max-w-xl text-sm leading-relaxed text-ink-2 md:text-base">
+              Skills represented as loaded system modules. Expand a module to inspect its registered
+              capabilities.
+            </p>
+          </div>
 
-      <div className="space-y-3">
-        {SKILL_MODULES.map((mod, idx) => {
-          const isOpen = open.includes(mod.id)
-          return (
-            <div
-              key={mod.id}
-              className={`hud-frame hud-corners relative overflow-hidden transition-colors ${
-                isOpen ? 'border-line-strong' : ''
-              }`}
-            >
+          <div className="space-y-3">
+            {SKILL_MODULES.map((mod, idx) => {
+              const isOpen = open.includes(mod.id)
+              return (
+                <div
+                  key={mod.id}
+                  className={`hud-frame hud-corners relative overflow-hidden transition-colors ${
+                    isOpen ? 'border-line-strong' : ''
+                  }`}
+                  onMouseEnter={() => setHovered(idx)}
+                  onMouseLeave={() => setHovered(-1)}
+                >
               <span className="corner-tick tl" />
               <span className="corner-tick tr" />
 
@@ -93,6 +100,13 @@ export default function Skills() {
             </div>
           )
         })}
+        </div>
+        </div>
+
+        {/* right — visual signature */}
+        <div className="lg:col-span-5">
+          <SkillsSignature active={hovered} />
+        </div>
       </div>
     </SectionShell>
   )
