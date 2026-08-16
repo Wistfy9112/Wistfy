@@ -177,9 +177,11 @@ export function HudRail() {
             }`}
             aria-current={active ? 'true' : undefined}
           >
-            <span className={`transition-colors ${active ? 'text-cyan' : 'text-ink-4'}`}>
-              {active ? '━━' : '──'}
-            </span>
+            <span
+              className={`inline-block h-px transition-all duration-300 ${
+                active ? 'w-6 bg-cyan' : 'w-3 bg-ink-4 group-hover:bg-ink-3'
+              }`}
+            />
             <span className="flex flex-col leading-tight">
               <span className="flex items-center gap-2">
                 <span

@@ -59,7 +59,7 @@ function GridFloor() {
     const mat = ref.current.material as THREE.MeshBasicMaterial
     const enter = Math.max(0, 1 - (performance.now() - p.sectionEnteredAt) / 700) * 0.04
     mat.opacity =
-      0.1 * (1 + Math.sin(t * 0.35) * 0.25) * (1 + p.scrollActive * 0.3) + enter
+      0.07 * (1 + Math.sin(t * 0.35) * 0.2) * (1 + p.scrollActive * 0.2) + enter
     mat.map!.offset.y = (t * 0.02) % 1
   })
 
@@ -69,7 +69,7 @@ function GridFloor() {
       <meshBasicMaterial
         map={makeGridTexture()}
         transparent
-        opacity={0.1}
+        opacity={0.07}
         depthWrite={false}
         side={THREE.DoubleSide}
       />
@@ -131,12 +131,12 @@ function Tower({
 
     // dynamic light — towers on the cursor's side read slightly brighter
     const facing = (data.pos[0] * p.cursorX + data.pos[1] * p.cursorY) * p.cursorActive
-    const light = clamp(1 + facing * 0.1, 0.55, 1.45)
+    const light = clamp(1 + facing * 0.06, 0.85, 1.2)
 
     const mat = ref.current.material as THREE.MeshBasicMaterial
     const sectionFactor = SECTION_FACTOR[p.section ?? 'hero'] ?? 1
-    const base = focused ? 0.34 : 0.16
-    const targetOpacity = clamp((base * sectionFactor * light + enter * 0.08), 0.05, 0.5)
+    const base = focused ? 0.16 : 0.09
+    const targetOpacity = clamp(base * sectionFactor * light + enter * 0.05, 0.03, 0.16)
     mat.opacity = THREE.MathUtils.lerp(mat.opacity, targetOpacity, 0.08)
   })
 
@@ -152,7 +152,7 @@ function Tower({
         color: new THREE.Color('#3ee6ff'),
         wireframe: true,
         transparent: true,
-        opacity: 0.16,
+        opacity: 0.09,
         depthWrite: false,
       }),
     []
@@ -255,14 +255,14 @@ function NetworkField({ reduced }: { reduced: boolean }) {
     attr.needsUpdate = true
     if (lineRef.current) {
       const mat = lineRef.current.material as THREE.LineBasicMaterial
-      mat.opacity = 0.1 + Math.sin(t * 0.8) * 0.03 + p.cursorActive * 0.04
+      mat.opacity = 0.07 + Math.sin(t * 0.8) * 0.02 + p.cursorActive * 0.02
     }
   })
 
   return (
     <group position={[0, 1, 0]}>
       <lineSegments ref={lineRef} geometry={lineGeometry}>
-        <lineBasicMaterial color={lineColor} transparent opacity={0.12} depthWrite={false} />
+        <lineBasicMaterial color={lineColor} transparent opacity={0.08} depthWrite={false} />
       </lineSegments>
       <points ref={pointsRef}>
         <bufferGeometry>
@@ -275,7 +275,7 @@ function NetworkField({ reduced }: { reduced: boolean }) {
           size={0.12}
           color="#3ee6ff"
           transparent
-          opacity={0.32}
+          opacity={0.18}
           sizeAttenuation
           depthWrite={false}
         />
@@ -337,7 +337,7 @@ function ParticleField({ count, reduced }: { count: number; reduced: boolean }) 
     }
     attr.needsUpdate = true
     ;(ref.current.material as THREE.PointsMaterial).opacity =
-      0.22 + Math.sin(t) * 0.06 + p.cursorActive * 0.05
+      0.11 + Math.sin(t) * 0.04 + p.cursorActive * 0.03
   })
 
   return (
@@ -349,7 +349,7 @@ function ParticleField({ count, reduced }: { count: number; reduced: boolean }) 
         size={0.05}
         color="#9fd4f5"
         transparent
-        opacity={0.22}
+        opacity={0.12}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}

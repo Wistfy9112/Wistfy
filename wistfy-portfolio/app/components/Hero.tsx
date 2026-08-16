@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { motion } from 'framer-motion'
 import { PROFILE } from '@/app/data/system'
 import { useSystem } from '@/app/system/SystemProvider'
 import { sfx } from '@/app/utils/sound'
-import HeroGeometry from '@/app/components/geometry/HeroGeometry'
+import { webglSupported, isWebGL2Supported } from '@/app/utils/webgl'
 
 const CLASSIFICATION = [
   { code: 'ROLE_01', label: 'GRAPHICS PROGRAMMER' },
@@ -19,6 +19,34 @@ const READY_STATES = [
   'LIGHT: SAMPLED',
   'RENDER LOOP: RUNNING',
 ]
+
+function useFps() {
+  const [fps, setFps] = useState(0)
+  const framesRef = useRef(0)
+  const lastRef = useRef(0)
+
+  useEffect(() => {
+    let raf = 0
+    const loop = (t: number) => {
+      raf = requestAnimationFrame(loop)
+      if (lastRef.current === 0) {
+        lastRef.current = t
+        return
+      }
+      framesRef.current++
+      const dt = t - lastRef.current
+      if (dt >= 1000) {
+        setFps(Math.round((framesRef.current * 1000) / dt))
+        framesRef.current = 0
+        lastRef.current = t
+      }
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  return fps
+}
 
 function useReadyTerminal() {
   const { reducedMotion } = useSystem()
@@ -51,6 +79,12 @@ function useReadyTerminal() {
 export default function Hero() {
   const { soundOn, pushLog, gpuMode, reducedMotion } = useSystem()
   const { stateIndex, typed } = useReadyTerminal()
+  const fps = useFps()
+  const isWebGL2 = useSyncExternalStore(
+    () => () => {},
+    () => webglSupported() && isWebGL2Supported(),
+    () => false
+  )
 
   const scrollToProjects = () => {
     if (soundOn) sfx.select()
@@ -73,7 +107,6 @@ export default function Hero() {
       aria-label="WISTFY — graphics laboratory"
     >
       <div className="tech-grid-fade pointer-events-none absolute inset-0" />
-      <HeroGeometry />
       <div className="hero-dark pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl">
@@ -130,11 +163,11 @@ export default function Hero() {
           <span className="cursor-blink text-cyan">▌</span>
         </div>
         <div className="mono mt-1 text-[9px] tracking-[0.25em] text-ink-4">
-          {gpuMode === 'FALLBACK' ? 'GRAPHICS MODE: FALLBACK' : 'RENDER: WEBGL / REAL-TIME'}
+          RENDER LOOP / {isReady ? 'RUNNING' : 'INIT'} · API / {gpuMode === 'FALLBACK' ? 'NONE' : isWebGL2 ? 'WEBGL2' : 'WEBGL'} · FPS / {fps || '--'} · GPU / {gpuMode === 'FALLBACK' ? 'SOFTWARE' : 'ACTIVE'}
         </div>
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
-          <button onClick={scrollToProjects} className="btn-hud" aria-label="View projects">
+          <button onClick={scrollToProjects} className="btn-hud btn-primary" aria-label="View projects">
             <span className="inline-block size-2 bg-cyan" />
             [ VIEW PROJECTS ]
           </button>

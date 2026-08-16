@@ -12,6 +12,7 @@ import MobileNav from '@/app/components/system/MobileNav'
 import Scanlines from '@/app/components/system/Scanlines'
 import EasterEggs from '@/app/components/system/EasterEggs'
 import Hero from '@/app/components/Hero'
+import HeroGeometry from '@/app/components/geometry/HeroGeometry'
 import ProjectGrid from '@/app/components/projects/ProjectGrid'
 import ProjectDetail from '@/app/components/projects/ProjectDetail'
 import About from '@/app/components/About'
@@ -42,6 +43,7 @@ export default function Experience() {
       {!booted && <BootSequence />}
 
       <VirtualWorld />
+      <HeroGeometry />
       <HudTop />
       <HudRail />
       <MobileNav />
