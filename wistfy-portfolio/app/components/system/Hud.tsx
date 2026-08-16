@@ -15,7 +15,9 @@ const MODULES: {
   { id: 'projects', code: 'SYS//01', label: 'PROJECTS', section: 'module-projects', hint: 'ACCESS PROJECT DATABASE' },
   { id: 'about', code: 'SYS//02', label: 'ABOUT', section: 'module-about', hint: 'OPEN SYSTEM PROFILE' },
   { id: 'skills', code: 'SYS//03', label: 'SKILLS', section: 'module-skills', hint: 'LOAD SYSTEM MODULES' },
-  { id: 'contact', code: 'SYS//04', label: 'CONTACT', section: 'module-contact', hint: 'ESTABLISH CONNECTION' },
+  { id: 'education', code: 'SYS//04', label: 'EDUCATION', section: 'module-education', hint: 'OPEN THE FOUNDATION' },
+  { id: 'achievements', code: 'SYS//05', label: 'ACHIEVEMENTS', section: 'module-achievements', hint: 'OPEN THE TROPHY ROOM' },
+  { id: 'contact', code: 'SYS//06', label: 'CONTACT', section: 'module-contact', hint: 'ESTABLISH CONNECTION' },
 ]
 
 function useClock() {
@@ -115,7 +117,7 @@ export function HudTop() {
   }
 
   return (
-    <header className="mono pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-line bg-abyss-1/80 px-4 py-2.5 text-[10px] tracking-[0.25em] backdrop-blur-sm md:px-6">
+    <header className="mono pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-line bg-abyss-1/80 px-4 py-2.5 text-xs tracking-[0.25em] backdrop-blur-sm md:px-6">
       <button
         onClick={handleSysClicks}
         className="pointer-events-auto flex items-center gap-2 text-ink transition-colors hover:text-cyan"
@@ -161,7 +163,7 @@ export function HudRail() {
 
   return (
     <nav
-      className="mono pointer-events-none fixed left-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-1 text-[10px] tracking-[0.25em] lg:flex"
+      className="mono pointer-events-none fixed left-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-1 text-xs tracking-[0.25em] lg:flex"
       aria-label="System modules"
     >
       {MODULES.map((mod) => {
@@ -187,9 +189,9 @@ export function HudRail() {
                 />
                 {mod.label}
               </span>
-              <span className="text-[8px] tracking-[0.2em] text-ink-4">{mod.code}</span>
+              <span className="text-[10px] tracking-[0.2em] text-ink-4">{mod.code}</span>
             </span>
-            <span className="pointer-events-none absolute left-full ml-4 whitespace-nowrap border border-line bg-abyss-1/90 px-3 py-1.5 text-[9px] tracking-[0.15em] text-cyan opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <span className="pointer-events-none absolute left-full ml-4 whitespace-nowrap border border-line bg-abyss-1/90 px-3 py-1.5 text-[11px] tracking-[0.15em] text-cyan opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {mod.hint}
             </span>
           </button>

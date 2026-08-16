@@ -23,7 +23,7 @@ function TerminalBlock({ title, children }: { title: string; children: React.Rea
       <div className="mono mb-2 flex items-center gap-2 text-[10px] tracking-[0.3em] text-cyan">
         <span>▸</span> {title}
       </div>
-      <div className="space-y-1 text-sm leading-relaxed text-ink-2">{children}</div>
+      <div className="space-y-1 text-[15px] leading-relaxed text-ink-2">{children}</div>
     </div>
   )
 }

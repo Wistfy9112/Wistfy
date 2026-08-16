@@ -6,13 +6,23 @@
 /* trigger re-renders. Components read getPassive() inside their own  */
 /* loops and apply subtle, damped motion.                             */
 
-export type PassiveSection = 'hero' | 'about' | 'projects' | 'skills' | 'contact' | null
+export type PassiveSection =
+  | 'hero'
+  | 'about'
+  | 'projects'
+  | 'skills'
+  | 'education'
+  | 'achievements'
+  | 'contact'
+  | null
 
 export const SECTION_BY_MODULE: { id: string; section: Exclude<PassiveSection, null> }[] = [
   { id: 'module-hero', section: 'hero' },
   { id: 'module-about', section: 'about' },
   { id: 'module-projects', section: 'projects' },
   { id: 'module-skills', section: 'skills' },
+  { id: 'module-education', section: 'education' },
+  { id: 'module-achievements', section: 'achievements' },
   { id: 'module-contact', section: 'contact' },
 ]
 

@@ -191,7 +191,7 @@ function ProjectCard({
           {titleCase(project.category)} / {project.technologies.slice(0, 3).join(' / ')}
         </div>
 
-        <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-2">{project.description}</p>
+        <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-ink-2">{project.description}</p>
 
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-3">
           <span className="card-action">VIEW PROJECT →</span>

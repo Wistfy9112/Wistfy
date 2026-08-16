@@ -10,7 +10,7 @@ import SkillsSignature from '@/app/components/SkillsSignature'
 
 export default function Skills() {
   const { soundOn, pushLog } = useSystem()
-  const [open, setOpen] = useState<string[]>(['graphics-engine'])
+  const [open, setOpen] = useState<string[]>(['graphics'])
   const [hovered, setHovered] = useState(-1)
 
   const toggle = (id: string) => {
@@ -26,7 +26,7 @@ export default function Skills() {
         {/* left — primary reading area */}
         <div className="lg:col-span-7">
           <div className="mb-10 md:mb-12">
-            <p className="max-w-xl text-sm leading-relaxed text-ink-2 md:text-base">
+            <p className="max-w-xl text-[15px] leading-relaxed text-ink-2 md:text-base">
               Skills represented as loaded system modules. Expand a module to inspect its registered
               capabilities.
             </p>

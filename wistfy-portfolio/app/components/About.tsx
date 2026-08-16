@@ -8,7 +8,7 @@ function Row({ label, value, children }: { label: string; value?: string; childr
   return (
     <div className="flex flex-col gap-1 border-b border-line/60 py-3 sm:flex-row sm:items-baseline sm:gap-8">
       <span className="mono w-36 shrink-0 text-[10px] tracking-[0.25em] text-ink-4">{label}</span>
-      {value ? <span className="text-sm text-ink-2">{value}</span> : children}
+      {value ? <span className="text-[15px] text-ink-2">{value}</span> : children}
     </div>
   )
 }
@@ -34,15 +34,13 @@ export default function About() {
 
         <div className="mb-10 space-y-4 text-base leading-relaxed text-ink-2 md:text-lg">
           <p>
-            I&apos;m a graphics programmer and software engineer who builds things the way I learn
-            best — from the inside out. Instead of reading about how a renderer works, I write one.
-            Instead of trusting a framework&apos;s abstractions, I take them apart to see what&apos;s
-            underneath.
+            I&apos;m a graphics programmer focused on real-time rendering, graphics systems and
+            interactive visual experiences — I build the systems that turn geometry into images.
           </p>
           <p className="text-ink-3">
-            That instinct shows up in everything here: real-time rendering engines, GPU pipelines,
-            systems experiments, and this very site — a portfolio designed as a virtual computer
-            system. Keep scrolling; the project map below is where the work actually lives.
+            That range shows up everywhere here: rendering pipelines, GPU work, engineering
+            experiments, and this very site — a portfolio designed as a virtual computer system.
+            Keep scrolling; the project map below is where the work actually lives.
           </p>
         </div>
 
@@ -52,7 +50,7 @@ export default function About() {
             <Row label="ROLE">
               <div className="space-y-1">
                 {PROFILE.roles.map((r) => (
-                  <div key={r} className="text-sm text-ink-2">▸ {r}</div>
+                  <div key={r} className="text-[15px] text-ink-2">▸ {r}</div>
                 ))}
               </div>
             </Row>
@@ -74,7 +72,7 @@ export default function About() {
               <span className="mono text-[10px] tracking-[0.3em] text-cyan">PERSONAL NOTE</span>
               <span className="corner-tick tr" />
             </div>
-            <div className="space-y-4 text-sm leading-relaxed text-ink-2 md:text-[15px]">
+            <div className="space-y-4 text-[15px] leading-relaxed text-ink-2 md:text-base">
               {PROFILE.bio.map((para, i) => (
                 <p key={i}>{para}</p>
               ))}

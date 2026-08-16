@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { PROFILE } from '@/app/data/system'
 import { useSystem } from '@/app/system/SystemProvider'
 import { sfx } from '@/app/utils/sound'
+import HeroGeometry from '@/app/components/geometry/HeroGeometry'
 
 const CLASSIFICATION = [
   { code: 'ROLE_01', label: 'GRAPHICS PROGRAMMER' },
@@ -13,10 +14,10 @@ const CLASSIFICATION = [
 ]
 
 const READY_STATES = [
-  'CONNECTING TO VIRTUAL ENVIRONMENT',
-  'GPU SUBSYSTEM: ONLINE',
-  'PROJECT DATABASE: MOUNTED',
-  'VIRTUAL ENVIRONMENT READY',
+  'SHADER: COMPILED',
+  'MESH: STREAMED',
+  'LIGHT: SAMPLED',
+  'RENDER LOOP: RUNNING',
 ]
 
 function useReadyTerminal() {
@@ -48,12 +49,12 @@ function useReadyTerminal() {
 }
 
 export default function Hero() {
-  const { soundOn, pushLog, debugMode, gpuMode, reducedMotion } = useSystem()
+  const { soundOn, pushLog, gpuMode, reducedMotion } = useSystem()
   const { stateIndex, typed } = useReadyTerminal()
 
   const scrollToProjects = () => {
     if (soundOn) sfx.select()
-    pushLog('ACCESSING PROJECT DATABASE...')
+    pushLog('Opening project archive...')
     document.getElementById('module-projects')?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -69,15 +70,17 @@ export default function Hero() {
     <section
       id="module-hero"
       className="relative flex min-h-screen items-center overflow-hidden px-5 md:px-8"
-      aria-label="WISTFY system welcome"
+      aria-label="WISTFY — graphics laboratory"
     >
       <div className="tech-grid-fade pointer-events-none absolute inset-0" />
+      <HeroGeometry />
+      <div className="hero-dark pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="mb-6 flex items-center gap-3">
           <span className="status-live inline-block size-2 bg-cyan" />
           <span className="mono text-[11px] tracking-[0.3em] text-ink-3">
-            SYSTEM STATUS: {debugMode ? 'DEBUG' : 'ONLINE'} / ACCESS GRANTED
+            GRAPHICS LAB / REAL-TIME
           </span>
         </div>
 
@@ -131,12 +134,12 @@ export default function Hero() {
         </div>
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
-          <button onClick={scrollToProjects} className="btn-hud" aria-label="Enter project database">
+          <button onClick={scrollToProjects} className="btn-hud" aria-label="View projects">
             <span className="inline-block size-2 bg-cyan" />
-            [ ACCESS DATABASE ]
+            [ VIEW PROJECTS ]
           </button>
           <button onClick={scrollToAbout} className="btn-hud btn-ghost">
-            [ SYSTEM PROFILE ]
+            [ ABOUT ME ]
           </button>
         </div>
       </div>

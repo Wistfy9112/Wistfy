@@ -2,7 +2,7 @@ export const PROFILE = {
   name: 'WISTFY',
   roles: ['GRAPHICS PROGRAMMER', 'SOFTWARE ENGINEER', 'CREATIVE TECHNOLOGIST'],
   statement:
-    'Building systems, rendering experiences, and turning ideas into interactive worlds.',
+    'Graphics programmer focused on real-time rendering, graphics systems and interactive visual experiences.',
   tagline: 'A portfolio that behaves like a virtual system, not a normal website.',
   interests: [
     'Real-time Rendering',
@@ -13,9 +13,8 @@ export const PROFILE = {
     'Software Architecture',
   ],
   bio: [
-    'I am a graphics programmer and software engineer who likes opening the box that normal applications hide away — the rendering pipeline, the memory layout, the frame loop, the shader.',
-    'Most of my work lives between C++ and the GPU: renderers, particle systems, voxel worlds, and the systems that make them fast. I care about precision, about understanding why something is slow, and about turning abstract algorithms into something you can see and touch.',
-    'This portfolio is itself one of those experiments — a virtual system where you, the visitor, connect to a machine and explore the work inside it.',
+    'I am a graphics programmer focused on real-time rendering, graphics systems and interactive visual experiences — from shaders and GPU pipelines to the interfaces people actually use.',
+    'Before specializing in graphics, I worked as a frontend developer at Boolfly Vietnam and published research on machine learning at ICTCC 2021. This portfolio is where that range — engineering, research and rendering — comes together.',
   ],
   location: 'HCM / REMOTE',
   contact: {
@@ -29,22 +28,16 @@ export const PROFILE = {
 
 export const SKILL_MODULES = [
   {
-    id: 'graphics-engine',
-    name: 'GRAPHICS ENGINE',
-    description: 'GPU programming and real-time rendering',
-    items: ['OpenGL', 'GLSL', 'Rendering Pipelines', 'Shaders', 'GPU Programming', 'WebGL'],
+    id: 'graphics',
+    name: 'GRAPHICS',
+    description: 'Real-time rendering and GPU programming',
+    items: ['OpenGL', 'Real-time Rendering', 'GPU Programming', 'Shader Programming', 'Computer Graphics'],
   },
   {
-    id: 'software-engineering',
-    name: 'SOFTWARE ENGINEERING',
-    description: 'Systems thinking and performance engineering',
-    items: ['C++', 'Python', 'C#', 'Architecture', 'Performance', 'Data Structures'],
-  },
-  {
-    id: 'web-systems',
-    name: 'WEB SYSTEMS',
-    description: 'Full-stack interactive applications',
-    items: ['React', 'TypeScript', 'Flask', 'Next.js', 'PostgreSQL', 'REST APIs'],
+    id: 'engineering',
+    name: 'ENGINEERING',
+    description: 'Systems programming and software engineering',
+    items: ['C++', 'C#', 'Python', 'JavaScript / TypeScript', 'Algorithms', 'Software Architecture'],
   },
 ]
 

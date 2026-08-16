@@ -10,7 +10,6 @@ const CHANNELS = [
   { id: 'GITHUB', label: 'github.com/Wistfy9112', href: PROFILE.contact.github, sig: 'CODE / SOURCE' },
   { id: 'LINKEDIN', label: 'in/vo-dinh-huy', href: PROFILE.contact.linkedin, sig: 'PROFESSIONAL' },
   { id: 'EMAIL', label: PROFILE.contact.email, href: `mailto:${PROFILE.contact.email}`, sig: 'DIRECT LINK' },
-  { id: 'FACEBOOK', label: '/Wistfy', href: PROFILE.contact.facebook, sig: 'SOCIAL' },
 ]
 
 export default function Contact() {
@@ -44,7 +43,7 @@ export default function Contact() {
             <h3 className="display mb-3 text-2xl font-semibold tracking-tight text-ink md:text-3xl">
               The comms channel is open.
             </h3>
-            <p className="max-w-md text-sm leading-relaxed text-ink-2 md:text-base">
+            <p className="max-w-md text-[15px] leading-relaxed text-ink-2 md:text-base">
               Pick a channel and send a signal. Rendering, systems, or anything that runs fast and
               looks good — I usually respond within a few days.
             </p>

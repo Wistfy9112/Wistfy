@@ -15,7 +15,10 @@ import Hero from '@/app/components/Hero'
 import ProjectGrid from '@/app/components/projects/ProjectGrid'
 import ProjectDetail from '@/app/components/projects/ProjectDetail'
 import About from '@/app/components/About'
+import WorkExperience from '@/app/components/WorkExperience'
 import Skills from '@/app/components/Skills'
+import Education from '@/app/components/Education'
+import Achievements from '@/app/components/Achievements'
 import Contact from '@/app/components/Contact'
 import Footer from '@/app/components/Footer'
 
@@ -48,7 +51,10 @@ export default function Experience() {
         <Hero />
         <ProjectGrid />
         <About />
+        <WorkExperience />
         <Skills />
+        <Education />
+        <Achievements />
         <Contact />
         <Footer />
       </main>

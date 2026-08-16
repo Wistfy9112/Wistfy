@@ -23,7 +23,7 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'WISTFY | SYSTEM PORTFOLIO',
   description:
-    'Interactive virtual portfolio of WISTFY — graphics programmer, software engineer, creative technologist. Building systems, rendering experiences, turning ideas into interactive worlds.',
+    'Interactive virtual portfolio of WISTFY — graphics programmer focused on real-time rendering, graphics systems and interactive visual experiences.',
   openGraph: {
     title: 'WISTFY | SYSTEM PORTFOLIO',
     description: 'Enter the WISTFY virtual system — a graphics programmer portfolio that behaves like a computer.',
