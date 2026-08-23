@@ -30,9 +30,9 @@ function buildSeries() {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  active: "#5b8cff",
-  wip: "#e0915a",
-  queued: "rgba(255,255,255,0.25)",
+  active: "var(--accent)",
+  wip: "var(--amber)",
+  queued: "var(--viz-dot)",
 };
 
 function TileHeader({
@@ -83,21 +83,21 @@ function MarketChart() {
       role="img"
       aria-label="Interactive market simulation chart"
     >
-      <g stroke="rgba(255,255,255,0.05)">
+      <g style={{ stroke: "var(--viz-s3)" }}>
         {[60, 120, 180].map((y) => (
           <line key={y} x1="0" y1={y} x2={W} y2={y} />
         ))}
       </g>
-      <path d={area} fill="rgba(224,145,90,0.06)" />
-      <path d={line} stroke="#e0915a" strokeWidth="1.5" fill="none" />
+      <path d={area} style={{ fill: "color-mix(in srgb, var(--amber) 7%, transparent)" }} />
+      <path d={line} style={{ stroke: "var(--amber)" }} strokeWidth="1.5" fill="none" />
       {point ? (
         <g>
-          <line x1={point.x} y1="0" x2={point.x} y2={H} stroke="rgba(255,255,255,0.25)" strokeDasharray="3 4" />
-          <line x1="0" y1={point.y} x2={W} y2={point.y} stroke="rgba(255,255,255,0.12)" strokeDasharray="3 4" />
-          <circle cx={point.x} cy={point.y} r="3.5" fill="#e0915a" />
+          <line x1={point.x} y1="0" x2={point.x} y2={H} style={{ stroke: "var(--viz-s1)" }} strokeDasharray="3 4" />
+          <line x1="0" y1={point.y} x2={W} y2={point.y} style={{ stroke: "var(--viz-s2)" }} strokeDasharray="3 4" />
+          <circle cx={point.x} cy={point.y} r="3.5" style={{ fill: "var(--amber)" }} />
           <g transform={`translate(${Math.min(point.x + 12, W - 128)}, ${Math.max(point.y - 30, 10)})`}>
-            <rect width="116" height="20" fill="rgba(10,10,10,0.9)" stroke="rgba(255,255,255,0.15)" />
-            <text x="8" y="13.5" fontFamily="var(--font-jetbrains-mono), monospace" fontSize="10" letterSpacing="1" fill="#f5f5f5">
+            <rect width="116" height="20" style={{ fill: "var(--tooltip-bg)", stroke: "var(--viz-s1)" }} />
+            <text x="8" y="13.5" fontFamily="var(--font-jetbrains-mono), monospace" fontSize="10" letterSpacing="1" style={{ fill: "var(--fg)" }}>
               {`T${String(hover ?? 0).padStart(3, "0")} · P ${point.y.toFixed(1)}`}
             </text>
           </g>
@@ -121,13 +121,20 @@ function NetworkGraph() {
   return (
     <svg viewBox="0 0 640 250" className="block h-full w-full" aria-hidden>
       {edges.map(([a, b], i) => (
-        <line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} stroke="rgba(183,224,90,0.16)" />
+        <line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} style={{ stroke: "color-mix(in srgb, var(--mint) 18%, transparent)" }} />
       ))}
       {nodes.map(([x, y], i) =>
         hubs.has(i) ? (
-          <circle key={i} cx={x} cy={y} r="4" fill="#b7e05a" className="node-pulse" style={{ animationDelay: `${i * 0.4}s` }} />
+          <circle
+            key={i}
+            cx={x}
+            cy={y}
+            r="4"
+            className="node-pulse"
+            style={{ fill: "var(--mint)", animationDelay: `${i * 0.4}s` }}
+          />
         ) : (
-          <rect key={i} x={x - 2.5} y={y - 2.5} width="5" height="5" fill="rgba(255,255,255,0.35)" />
+          <rect key={i} x={x - 2.5} y={y - 2.5} width="5" height="5" style={{ fill: "var(--viz-dot)" }} />
         ),
       )}
     </svg>
@@ -136,10 +143,10 @@ function NetworkGraph() {
 
 function BacktestMetrics() {
   const rows = [
-    ["Return", "+18.4%", 78, "#5b8cff"],
-    ["Max drawdown", "-9.2%", 42, "#e0915a"],
-    ["Win rate", "61%", 61, "#b7e05a"],
-    ["Exposure", "37%", 37, "rgba(255,255,255,0.4)"],
+    ["Return", "+18.4%", 78, "var(--accent)"],
+    ["Max drawdown", "-9.2%", 42, "var(--amber)"],
+    ["Win rate", "61%", 61, "var(--mint)"],
+    ["Exposure", "37%", 37, "var(--viz-dot)"],
   ] as const;
   return (
     <dl className="space-y-5 px-5 py-5">

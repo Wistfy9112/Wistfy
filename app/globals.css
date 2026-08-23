@@ -1,25 +1,87 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-base: #0a0a0a;
-  --color-panel: #101012;
-  --color-raised: #16161a;
-  --color-fg: #f5f5f5;
-  --color-dim: #8a8a8a;
-  --color-faint: #55555b;
-  --color-hair: rgba(255, 255, 255, 0.07);
-  --color-edge: rgba(255, 255, 255, 0.14);
-  --color-accent: #5b8cff;
-  --color-amber: #e0915a;
-  --color-mint: #b7e05a;
-  --color-iris: #9b8afb;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-jetbrains-mono);
-}
+/* ---------- Palette: dark (default) ---------- */
 
 :root {
   color-scheme: dark;
+
+  --bg: #0a0a0b;
+  --panel: #101013;
+  --raised: #16161a;
+  --fg: #f5f5f5;
+  --dim: #8a8a8a;
+  --faint: #55555b;
+  --hair: rgba(255, 255, 255, 0.07);
+  --edge: rgba(255, 255, 255, 0.14);
+
+  --accent: #5b8cff;
+  --amber: #e0915a;
+  --mint: #b7e05a;
+  --iris: #9b8afb;
+  --on-accent: #060607;
+
+  --grid-line: rgba(255, 255, 255, 0.024);
+  --glow: rgba(91, 140, 255, 0.07);
+
+  --viz-s1: rgba(255, 255, 255, 0.17);
+  --viz-s2: rgba(255, 255, 255, 0.08);
+  --viz-s3: rgba(255, 255, 255, 0.05);
+  --viz-fill: rgba(255, 255, 255, 0.14);
+  --viz-dot: rgba(255, 255, 255, 0.32);
+  --viz-text: rgba(150, 150, 155, 0.85);
+  --tooltip-bg: rgba(12, 12, 14, 0.94);
+}
+
+/* ---------- Palette: light ---------- */
+
+html.light {
+  color-scheme: light;
+
+  --bg: #fafafa;
+  --panel: #ffffff;
+  --raised: #f0f0ee;
+  --fg: #17171a;
+  --dim: #55555c;
+  --faint: #8b8b92;
+  --hair: rgba(20, 20, 30, 0.09);
+  --edge: rgba(20, 20, 30, 0.18);
+
+  --accent: #2f5fe8;
+  --amber: #b06a2e;
+  --mint: #5c8f1d;
+  --iris: #6f52e0;
+  --on-accent: #ffffff;
+
+  --grid-line: rgba(20, 20, 40, 0.038);
+  --glow: rgba(47, 95, 232, 0.05);
+
+  --viz-s1: rgba(23, 23, 26, 0.2);
+  --viz-s2: rgba(23, 23, 26, 0.11);
+  --viz-s3: rgba(23, 23, 26, 0.07);
+  --viz-fill: rgba(23, 23, 26, 0.16);
+  --viz-dot: rgba(23, 23, 26, 0.42);
+  --viz-text: rgba(85, 85, 92, 0.95);
+  --tooltip-bg: rgba(255, 255, 255, 0.96);
+}
+
+/* ---------- Token mapping ---------- */
+
+@theme inline {
+  --color-base: var(--bg);
+  --color-panel: var(--panel);
+  --color-raised: var(--raised);
+  --color-fg: var(--fg);
+  --color-dim: var(--dim);
+  --color-faint: var(--faint);
+  --color-hair: var(--hair);
+  --color-edge: var(--edge);
+  --color-accent: var(--accent);
+  --color-amber: var(--amber);
+  --color-mint: var(--mint);
+  --color-iris: var(--iris);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 html {
@@ -27,34 +89,34 @@ html {
 }
 
 body {
-  background: var(--color-base);
-  color: var(--color-fg);
+  background: var(--bg);
+  color: var(--fg);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: #060607;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-base);
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--edge);
   border-radius: 9999px;
-  border: 2px solid var(--color-base);
+  border: 2px solid var(--bg);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--dim);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -70,8 +132,8 @@ body {
 
 .bg-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 88px 88px;
 }
 
@@ -79,23 +141,23 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
 }
 
-.hairline-x {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.14) 12%,
-    rgba(255, 255, 255, 0.14) 88%,
-    transparent
-  );
-  height: 1px;
-}
-
 .link-quiet {
-  color: var(--color-dim);
+  color: var(--dim);
   transition: color 0.25s ease;
 }
 .link-quiet:hover {
-  color: var(--color-fg);
+  color: var(--fg);
+}
+
+/* theme toggle icons — CSS-driven, no hydration mismatch */
+.theme-icon-moon {
+  display: none;
+}
+html.light .theme-icon-sun {
+  display: none;
+}
+html.light .theme-icon-moon {
+  display: block;
 }
 
 .node-pulse {

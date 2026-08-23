@@ -6,7 +6,7 @@ export default function GridBackdrop() {
         className="absolute inset-x-0 top-0 h-[420px]"
         style={{
           background:
-            "radial-gradient(ellipse 60% 100% at 50% -20%, rgba(91,140,255,0.07), transparent 70%)",
+            "radial-gradient(ellipse 60% 100% at 50% -20%, var(--glow), transparent 70%)",
         }}
       />
       <div className="noise absolute inset-0 opacity-[0.032]" />

@@ -67,8 +67,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem("theme");var l=window.matchMedia("(prefers-color-scheme: light)").matches;if(s==="light"||(!s&&l)){document.documentElement.classList.add("light")}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-base text-fg">
         <a
           href="#main-content"

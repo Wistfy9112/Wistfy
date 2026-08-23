@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import SystemDiagram from "@/app/components/viz/SystemDiagram";
+import WistfyIdentity from "@/app/components/viz/WistfyIdentity";
 import { site } from "@/app/data/site";
 
 const container = {
@@ -23,7 +23,7 @@ const item = {
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-6xl gap-16 px-5 pb-20 pt-32 md:px-8 md:pt-40 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-8">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-32 md:px-8 md:pt-40">
         <motion.div variants={container} initial="hidden" animate="show">
           <motion.div
             variants={item}
@@ -81,38 +81,23 @@ export default function Hero() {
               Contact
             </Link>
           </motion.div>
-
-          <motion.dl
-            variants={item}
-            className="mt-14 grid max-w-md grid-cols-3 gap-6 border-t border-hair pt-6"
-          >
-            {[
-              ["Focus", "Systems"],
-              ["Base", site.location],
-              ["Status", "Open"],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="meta-label text-faint">{k}</dt>
-                <dd className="mt-1.5 font-mono text-sm text-fg">{v}</dd>
-              </div>
-            ))}
-          </motion.dl>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 0.4, 0.2, 1] }}
-          className="hidden justify-center lg:flex"
-        >
-          <SystemDiagram />
         </motion.div>
       </div>
+
+      {/* identity system — full-width hero visual */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 0.4, 0.2, 1] }}
+        className="mx-auto max-w-6xl px-5 pb-20 md:px-8"
+      >
+        <WistfyIdentity />
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.1 }}
+        transition={{ delay: 1.2 }}
         className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 md:block"
       >
         <Link href="/#about" aria-label="Scroll to about section">

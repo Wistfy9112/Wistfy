@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import ThemeToggle from "@/app/components/layout/ThemeToggle";
 import { navLinks, site } from "@/app/data/site";
 import { useScrollSpy } from "@/app/hooks/useScrollSpy";
 
@@ -72,33 +73,34 @@ export default function Navbar() {
                   </Link>
                 </li>
               );
-            })}
-            <li className="ml-3">
-              <span className="flex items-center gap-2 border border-edge px-3 py-1.5">
-                <span className="node-pulse h-1.5 w-1.5 rounded-full bg-accent" />
-                <span className="meta-label text-dim">Open to work</span>
-              </span>
-            </li>
-          </ul>
+             })}
+           </ul>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
-          >
-            <span
-              className={`h-px w-6 bg-fg transition-transform duration-300 ${
-                open ? "translate-y-[3.5px] rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`h-px w-6 bg-fg transition-transform duration-300 ${
-                open ? "-translate-y-[3.5px] -rotate-45" : ""
-              }`}
-            />
-          </button>
+          <div className="flex items-center gap-2">
+            <span className="hidden items-center gap-2 border border-edge px-3 py-1.5 md:flex">
+              <span className="node-pulse h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="meta-label text-dim">Open to work</span>
+            </span>
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
+            >
+              <span
+                className={`h-px w-6 bg-fg transition-transform duration-300 ${
+                  open ? "translate-y-[3.5px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`h-px w-6 bg-fg transition-transform duration-300 ${
+                  open ? "-translate-y-[3.5px] -rotate-45" : ""
+                }`}
+              />
+            </button>
+          </div>
         </nav>
       </header>
 
