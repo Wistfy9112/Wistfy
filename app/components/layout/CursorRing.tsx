@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSyncExternalStore } from "react";
 import {
   motion,
@@ -38,11 +38,13 @@ export default function CursorRing() {
   const sx = useSpring(x, { stiffness: 500, damping: 40, mass: 0.4 });
   const sy = useSpring(y, { stiffness: 500, damping: 40, mass: 0.4 });
 
+  const enabled = pointerFine && !reduced;
+
   const onMove = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
-      const target = (e.target as HTMLElement | null)?.closest(
+      const target = (e.target as Element | null)?.closest(
         "a, button, [data-cursor]",
       ) as HTMLElement | null;
       setActive(Boolean(target));
@@ -51,35 +53,36 @@ export default function CursorRing() {
     [x, y],
   );
 
-  if (!pointerFine || reduced) return null;
+  useEffect(() => {
+    if (!enabled) return;
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [enabled, onMove]);
+
+  if (!enabled) return null;
 
   return (
-    <div
-      className="pointer-events-none fixed inset-0 z-[90]"
-      onMouseMove={onMove}
+    <motion.div
       aria-hidden
+      className="pointer-events-none fixed left-0 top-0 z-[90] flex items-center justify-center rounded-full border border-accent/70"
+      style={{
+        x: sx,
+        y: sy,
+        translateX: "-50%",
+        translateY: "-50%",
+        mixBlendMode: "difference",
+      }}
+      animate={{
+        width: label ? 64 : active ? 44 : 26,
+        height: label ? 64 : active ? 44 : 26,
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
     >
-      <motion.div
-        className="absolute left-0 top-0 flex items-center justify-center rounded-full border border-accent/70"
-        style={{
-          x: sx,
-          y: sy,
-          translateX: "-50%",
-          translateY: "-50%",
-          mixBlendMode: "difference",
-        }}
-        animate={{
-          width: label ? 64 : active ? 44 : 26,
-          height: label ? 64 : active ? 44 : 26,
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      >
-        {label ? (
-          <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg">
-            {label}
-          </span>
-        ) : null}
-      </motion.div>
-    </div>
+      {label ? (
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg">
+          {label}
+        </span>
+      ) : null}
+    </motion.div>
   );
 }

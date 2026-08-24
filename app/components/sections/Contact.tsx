@@ -26,7 +26,7 @@ export default function Contact() {
           <a
             href={`mailto:${site.email}?subject=Hello%20Huy`}
             data-cursor="Send"
-            className="group mt-12 inline-flex items-center gap-3 border border-edge bg-panel/60 px-8 py-5 font-mono text-sm uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:bg-accent hover:text-white"
+            className="group mt-12 inline-flex items-center gap-3 border border-edge bg-panel/60 px-8 py-5 font-mono text-sm uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:bg-accent hover:text-on-accent"
           >
             Start a conversation
             <ArrowUpRight
@@ -39,22 +39,23 @@ export default function Contact() {
         <Reveal delay={0.14}>
           <dl className="mt-20 grid grid-cols-1 gap-px overflow-hidden border border-hair bg-hair sm:grid-cols-3">
             {site.socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group bg-base px-6 py-6 transition-colors hover:bg-panel"
-              >
-                <dt className="meta-label flex items-center justify-between text-accent">
-                  {s.label}
-                  <ArrowUpRight
-                    size={13}
-                    className="opacity-0 transition-opacity group-hover:opacity-100"
-                  />
-                </dt>
-                <dd className="mt-2 font-mono text-sm text-dim">{s.handle}</dd>
-              </a>
+              <div key={s.label} className="bg-base">
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block px-6 py-6 transition-colors hover:bg-panel"
+                >
+                  <dt className="meta-label flex items-center justify-between text-accent">
+                    {s.label}
+                    <ArrowUpRight
+                      size={13}
+                      className="opacity-0 transition-opacity group-hover:opacity-100"
+                    />
+                  </dt>
+                  <dd className="mt-2 font-mono text-sm text-dim">{s.handle}</dd>
+                </a>
+              </div>
             ))}
           </dl>
         </Reveal>

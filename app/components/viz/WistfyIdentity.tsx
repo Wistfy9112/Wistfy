@@ -6,130 +6,187 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useReducedMotion,
 } from "framer-motion";
 
 const VBW = 1120;
-const VBH = 630;
-const TOP = 214;
-const BASE = 416;
+const VBH = 720;
+
+/* frame — engineering viewport */
+const FX = 40;
+const FY = 110;
+const FW = 1040;
+const FH = 530;
+
+/* grid calibration — every size derives from the background grid */
+const GRID_PX = 88; /* bg-grid cell, globals.css background-size */
+const SVG_RENDER_W = 1000; /* max-w constraint on the component root */
+const UNIT_PX = SVG_RENDER_W / VBW; /* viewBox unit → css px at calibration */
+
+/* wordmark metrics — W leads, I S T F Y extends, grid-locked and
+   centered inside the frame: horizontal via measured span, vertical
+   via BASE derivation */
+const GAP = 30; /* W → I breathing */
+const TGAP = 22; /* inter-letter tracking — uniform, ink-to-ink */
+
+const LETTER_CELLS = 2; /* ISTFY cap height = 2 cells = 176px */
+const LETTER_H = (LETTER_CELLS * GRID_PX) / UNIT_PX; /* 197.1 local units */
+
+const W_CELLS = 2.5; /* W ink height = 2.5 cells = 220px */
+const W_INK_H = (W_CELLS * GRID_PX) / UNIT_PX; /* 246.4 local units */
+const W_S = W_INK_H / 264; /* construction path is 264 units tall */
+const W_W = 300 * W_S; /* unsqueezed ink width follows glyph aspect */
+const W_NARROW = W_INK_H / W_W; /* squeeze → square 2.5×2.5 ô bounding box */
+const W_W_NARROWED = W_W * W_NARROW;
+const W_H = W_INK_H;
+
+const BASE = FY + (FH + W_INK_H) / 2; /* word block vertically centered */
+const K = LETTER_H / 200; /* glyph paths are 200 units tall */
+const TOP_S = BASE - LETTER_H;
+const W_Y = BASE - 264 * W_S; /* feet land exactly on BASE */
+/* W_X and AXIS_X are derived after the word layout is measured */
 
 const NS = { vectorEffect: "non-scaling-stroke" as const };
 
 const S2 = "var(--viz-s2)";
 const S3 = "var(--viz-s3)";
-const DOT = "var(--viz-dot)";
 const TEXT = "var(--viz-text)";
 const GRAPHITE = "color-mix(in srgb, var(--fg) 82%, transparent)";
 const ACCENT = "var(--accent)";
 
+/* load sequence — system builds itself, ~1.8s total */
+const T = {
+  frame: 0,
+  grid: 0.18,
+  nodes: 0.42,
+  draw: 0.58,
+  istfy: 1.05,
+  core: 1.3,
+  chrome: 1.45,
+};
+
 type LetterNode = {
   x: number;
   y: number;
-  kind: "dot" | "ring" | "active" | "active-ring";
+  kind: "dot" | "ring" | "foot";
 };
 
 type Letter = {
   key: string;
-  x: number;
   w: number;
+  sw?: number; /* optical stroke compensation */
   paths: string[];
   nodes: LetterNode[];
-  guides?: { x1: number; y1: number; x2: number; y2: number }[];
 };
 
-function buildLetters(): Letter[] {
-  let x = 285;
-  const gap = 30;
-  const defs: Omit<Letter, "x">[] = [
-    {
-      key: "W",
-      w: 116,
-      paths: ["M2 4 L30 196 L58 66 L86 196 L114 4"],
-      nodes: [
-        { x: 2, y: 4, kind: "dot" },
-        { x: 30, y: 196, kind: "active" },
-        { x: 58, y: 66, kind: "active-ring" },
-        { x: 86, y: 196, kind: "active" },
-        { x: 114, y: 4, kind: "dot" },
-      ],
-      guides: [{ x1: 58, y1: -22, x2: 58, y2: 222 }],
-    },
-    {
-      key: "I",
-      w: 10,
-      paths: ["M5 0 V200", "M-9 0 H19", "M-9 200 H19"],
-      nodes: [{ x: 5, y: 100, kind: "dot" }],
-    },
-    {
-      key: "S",
-      w: 68,
-      paths: [
-        "M64 24 C58 8 42 0 28 3 C10 7 2 26 9 44 C15 59 30 65 41 75 C55 87 63 99 61 121 C58 150 40 166 22 161 C9 157 1 146 0 132",
-      ],
-      nodes: [
-        { x: 64, y: 24, kind: "dot" },
-        { x: 0, y: 132, kind: "dot" },
-      ],
-    },
-    {
-      key: "T",
-      w: 72,
-      paths: ["M2 0 H70", "M36 0 V200"],
-      nodes: [
-        { x: 36, y: 0, kind: "dot" },
-        { x: 36, y: 200, kind: "dot" },
-      ],
-      guides: [{ x1: 36, y1: -22, x2: 36, y2: 222 }],
-    },
-    {
-      key: "F",
-      w: 58,
-      paths: ["M4 200 V0 H54", "M4 78 H44"],
-      nodes: [
-        { x: 4, y: 0, kind: "dot" },
-        { x: 54, y: 0, kind: "dot" },
-        { x: 44, y: 78, kind: "dot" },
-        { x: 4, y: 200, kind: "dot" },
-      ],
-    },
-    {
-      key: "Y",
-      w: 76,
-      paths: ["M2 0 L38 80", "M74 0 L38 80", "M38 80 V200"],
-      nodes: [
-        { x: 2, y: 0, kind: "dot" },
-        { x: 74, y: 0, kind: "dot" },
-        { x: 38, y: 80, kind: "ring" },
-        { x: 38, y: 200, kind: "dot" },
-      ],
-    },
-  ];
-  return defs.map((d) => {
-    const letter = { ...d, x };
-    x += d.w + gap;
-    return letter;
-  });
-}
-
-const LETTERS = buildLetters();
-
-const SCATTER: [number, number][] = [
-  [214, 258], [262, 372], [452, 232], [520, 398], [648, 236],
-  [704, 386], [884, 260], [912, 352], [352, 178], [756, 448],
+const LETTER_DEFS: Letter[] = [
+  {
+    /* zero-based ink: advance == glyph width, uniform tracking stays optical */
+    key: "I",
+    w: 28,
+    paths: ["M14 0 V200", "M0 0 H28", "M0 200 H28"],
+    nodes: [
+      { x: 14, y: 100, kind: "dot" },
+      { x: 14, y: 200, kind: "foot" },
+    ],
+  },
+  {
+    /* constructed S — mirrored bowls with cap/baseline overshoot; kept
+       narrower than the flat letters since curves read optically wider */
+    key: "S",
+    w: 65,
+    sw: 2.8,
+    paths: [
+      "M55 10 C47 -1 38 -4 27 -2 C13 0 2 18 0 46 C-1 73 12 87 34 101 C56 114 64 128 64 156 C63 184 53 200 41 202 C27 201 13 196 7 188",
+    ],
+    nodes: [
+      { x: 55, y: 10, kind: "dot" },
+      { x: 7, y: 188, kind: "dot" },
+    ],
+  },
+  {
+    key: "T",
+    w: 68,
+    paths: ["M0 0 H68", "M34 0 V200"],
+    nodes: [
+      { x: 34, y: 0, kind: "dot" },
+      { x: 34, y: 200, kind: "foot" },
+    ],
+  },
+  {
+    key: "F",
+    w: 54,
+    paths: ["M4 200 V0 H54", "M4 78 H44"],
+    nodes: [{ x: 54, y: 0, kind: "dot" }],
+  },
+  {
+    key: "Y",
+    w: 72,
+    paths: ["M0 0 L36 80", "M72 0 L36 80", "M36 80 V200"],
+    nodes: [
+      { x: 0, y: 0, kind: "dot" },
+      { x: 72, y: 0, kind: "dot" },
+      { x: 36, y: 80, kind: "ring" },
+      { x: 36, y: 200, kind: "foot" },
+    ],
+  },
 ];
+
+/* optical kerning — extra leading space before a glyph, in css px */
+const OPTICAL_KERN: Record<string, number> = { S: 5 };
+
+/* layout runs on a zero-origin axis so the span can be measured first,
+   then the word is pinned dead-center inside the frame */
+let relCursor = W_W_NARROWED + GAP;
+let kernCarry = 0;
+const LETTERS = LETTER_DEFS.map((l) => {
+  kernCarry += (OPTICAL_KERN[l.key] ?? 0) / UNIT_PX;
+  const letter = { ...l, x: relCursor + kernCarry };
+  relCursor += l.w * K + TGAP;
+  return letter;
+});
+const WORD_SPAN =
+  LETTERS[LETTERS.length - 1].x + LETTERS[LETTERS.length - 1].w * K;
+
+const W_X = FX + (FW - WORD_SPAN) / 2;
+const AXIS_X = W_X + 151 * W_S * W_NARROW;
+for (const l of LETTERS) l.x += W_X;
+const WORD_END = W_X + WORD_SPAN;
+
+/* W structural network — asymmetric, sharp central apex.
+   Standalone logo box: viewBox="0 0 300 264".
+   The core depth is grid-locked: CORE_CELLS above the baseline. */
+const CORE_CELLS = 1.75; /* core sits 1.75 cells = 154px above the baseline */
+const CORE_Y = Number(
+  (264 - (CORE_CELLS * GRID_PX) / (UNIT_PX * W_S)).toFixed(2),
+); /* path units */
+const W_PATH = `M0 0 L58 264 L151 ${CORE_Y} L232 264 L300 10`;
+const CORE = { x: 151, y: CORE_Y };
+const MID_MEASURE = {
+  x: (58 + CORE.x) / 2,
+  y: (264 + CORE_Y) / 2,
+}; /* coordinate intersection on N2→core stroke */
+
+const NODE_COUNT = 26;
 
 export default function WistfyIdentity() {
   const ref = useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = useState({ x: 560, y: 280 });
+  const [coords, setCoords] = useState({ x: 560, y: 360 });
+  const [wSel, setWSel] = useState(false);
+  const reduced = useReducedMotion();
 
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
-  const sx = useSpring(rawX, { stiffness: 55, damping: 20 });
-  const sy = useSpring(rawY, { stiffness: 55, damping: 20 });
-  const farX = useTransform(sx, [-0.5, 0.5], [7, -7]);
-  const farY = useTransform(sy, [-0.5, 0.5], [5, -5]);
-  const nearX = useTransform(sx, [-0.5, 0.5], [-4, 4]);
-  const nearY = useTransform(sy, [-0.5, 0.5], [-3, 3]);
+  const sx = useSpring(rawX, { stiffness: 45, damping: 18 });
+  const sy = useSpring(rawY, { stiffness: 45, damping: 18 });
+
+  /* quiet parallax — 1–3px per layer */
+  const farX = useTransform(sx, [-0.5, 0.5], [3, -3]);
+  const farY = useTransform(sy, [-0.5, 0.5], [2, -2]);
+  const nearX = useTransform(sx, [-0.5, 0.5], [-1.5, 1.5]);
+  const nearY = useTransform(sy, [-0.5, 0.5], [-1, 1]);
+  const wX = useTransform(sx, [-0.5, 0.5], [2, -2]);
+  const wY = useTransform(sy, [-0.5, 0.5], [-1.5, 1.5]);
 
   function onMove(e: React.MouseEvent) {
     const rect = ref.current?.getBoundingClientRect();
@@ -147,259 +204,490 @@ export default function WistfyIdentity() {
   function onLeave() {
     rawX.set(0);
     rawY.set(0);
-    setCoords({ x: 560, y: 280 });
+    setCoords({ x: 560, y: 360 });
   }
+
+  /* staged fade — skipped entirely under reduced motion */
+  function stage(delay: number) {
+    return reduced
+      ? {}
+      : {
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          transition: { duration: 0.45, delay },
+        };
+  }
+
+  const selStroke = (base: string) => (wSel ? ACCENT : base);
 
   return (
     <div
       ref={ref}
       onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="w-full select-none"
-      aria-hidden
+      onMouseLeave={() => {
+        onLeave();
+        setWSel(false);
+      }}
+      className="mx-auto w-full max-w-[1000px] select-none"
     >
       <svg
         viewBox={`0 0 ${VBW} ${VBH}`}
         fill="none"
         className="h-auto w-full"
         role="img"
-        aria-label="WISTFY identity — engineered letterform system"
+        aria-label="WISTFY identity system — the letter W constructed from a network of nodes and vectors"
       >
-        {/* ---------- far layer: grid frame, orbital system ---------- */}
-        <motion.g style={{ x: farX, y: farY }}>
-          <rect
-            x="24"
-            y="24"
-            width={VBW - 48}
-            height={VBH - 48}
-            style={{ stroke: S2 }}
-            {...NS}
-          />
-
-          {/* corner registration crosses */}
-          {[
-            [24, 24],
-            [VBW - 24, 24],
-            [24, VBH - 24],
-            [VBW - 24, VBH - 24],
-          ].map(([cx, cy]) => (
-            <g key={`${cx}-${cy}`} style={{ stroke: S2 }} strokeWidth="1">
-              <line x1={cx - 6} y1={cy} x2={cx + 6} y2={cy} />
-              <line x1={cx} y1={cy - 6} x2={cx} y2={cy + 6} />
-            </g>
-          ))}
-
-          {/* dotted orbital path */}
-          <ellipse
-            cx="560"
-            cy="315"
-            rx="340"
-            ry="158"
-            transform="rotate(-3 560 315)"
-            style={{ stroke: S2 }}
-            strokeDasharray="1 8"
-            strokeLinecap="round"
-            {...NS}
-          />
-
-          {/* construction circle around W + small circle near Y */}
-          <circle
-            cx="343"
-            cy="315"
-            r="104"
-            style={{ stroke: S3 }}
-            strokeDasharray="5 7"
-            className="dash-rotate"
-            {...NS}
-          />
-          <circle cx="797" cy="315" r="72" style={{ stroke: S3 }} {...NS} />
-
-          {/* cap/base construction lines across the word */}
-          <g style={{ stroke: S3 }}>
-            <line x1="210" y1={TOP} x2="910" y2={TOP} />
-            <line x1="210" y1={BASE} x2="910" y2={BASE} />
-          </g>
-
-          {/* measurement ticks under word span */}
-          <g style={{ stroke: S2 }}>
-            {Array.from({ length: 14 }, (_, i) => {
-              const tx = 285 + i * ((835 - 285) / 13);
-              return <line key={tx} x1={tx} y1={BASE + 10} x2={tx} y2={BASE + 16} />;
-            })}
-          </g>
-
-          {/* dimension line under W */}
-          <g style={{ stroke: S2 }}>
-            <line x1="285" y1="446" x2="401" y2="446" />
-            <line x1="285" y1="441" x2="285" y2="451" />
-            <line x1="401" y1="441" x2="401" y2="451" />
-          </g>
+        {/* ---------- source axis: hero → system ---------- */}
+        <motion.g {...stage(T.grid)}>
+          <line x1={AXIS_X} y1="10" x2={AXIS_X} y2={FY} style={{ stroke: S2 }} {...NS} />
+          <rect x={AXIS_X - 2.5} y="6" width="5" height="5" style={{ fill: "var(--viz-dot)" }} />
+          <rect x={AXIS_X - 2.5} y={FY - 4} width="5" height="5" style={{ fill: "var(--viz-dot)" }} />
           <text
-            x="412"
-            y="450"
+            x={AXIS_X + 14}
+            y="28"
             fontFamily="var(--font-jetbrains-mono), monospace"
             fontSize="10"
-            letterSpacing="1.5"
+            letterSpacing="2"
             style={{ fill: TEXT }}
           >
-            W=116
+            SRC / VO HUY
           </text>
-
-          {/* scatter data markers */}
-          {SCATTER.map(([px, py]) => (
-            <rect
-              key={`${px}-${py}`}
-              x={px}
-              y={py}
-              width="2.6"
-              height="2.6"
-              style={{ fill: DOT }}
-            />
-          ))}
-
-          {/* center crosshair */}
-          <g style={{ stroke: S2 }}>
-            <line x1="552" y1="315" x2="568" y2="315" />
-            <line x1="560" y1="307" x2="560" y2="323" />
-          </g>
         </motion.g>
 
-        {/* ---------- near layer: the wordmark system ---------- */}
-        <motion.g style={{ x: nearX, y: nearY }}>
-          {/* alignment guides through key stems */}
-          <g style={{ stroke: S3 }} strokeDasharray="3 6">
-            {LETTERS.flatMap((l) =>
-              (l.guides ?? []).map((g, gi) => (
-                <line
-                  key={`${l.key}-${gi}`}
-                  x1={l.x + g.x1}
-                  y1={TOP + g.y1}
-                  x2={l.x + g.x2}
-                  y2={TOP + g.y2}
-                />
-              )),
-            )}
-          </g>
-
-          {/* letterforms */}
-          {LETTERS.map((l) => (
-            <g key={l.key} transform={`translate(${l.x} ${TOP})`}>
-              {l.paths.map((d, i) => (
-                <path
-                  key={i}
-                  d={d}
-                  style={{
-                    stroke:
-                      l.key === "W"
-                        ? "color-mix(in srgb, var(--fg) 92%, transparent)"
-                        : GRAPHITE,
-                  }}
-                  strokeWidth={l.key === "W" ? 2.6 : 2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  {...NS}
-                />
-              ))}
-              {l.nodes.map((n, ni) => {
-                const cx = n.x;
-                const cy = n.y;
-                if (n.kind === "active") {
-                  return (
-                    <circle
-                      key={ni}
-                      cx={cx}
-                      cy={cy}
-                      r="3.4"
-                      style={{ fill: ACCENT }}
-                      className="node-pulse"
-                      stroke="none"
-                    />
-                  );
-                }
-                if (n.kind === "active-ring") {
-                  return (
-                    <circle
-                      key={ni}
-                      cx={cx}
-                      cy={cy}
-                      r="6"
-                      style={{ stroke: ACCENT }}
-                      strokeWidth="1.2"
-                      fill="none"
-                    />
-                  );
-                }
-                if (n.kind === "ring") {
-                  return (
-                    <circle
-                      key={ni}
-                      cx={cx}
-                      cy={cy}
-                      r="4.4"
-                      style={{ stroke: GRAPHITE }}
-                      strokeWidth="1.1"
-                      fill="var(--bg)"
-                    />
-                  );
-                }
+        {/* ---------- far layer: viewport instrument ---------- */}
+        <motion.g style={{ x: farX, y: farY }}>
+          <motion.g {...stage(T.frame)}>
+            <rect x={FX} y={FY} width={FW} height={FH} style={{ stroke: S2 }} {...NS} />
+            {[
+              [FX, FY],
+              [FX + FW, FY],
+              [FX, FY + FH],
+              [FX + FW, FY + FH],
+            ].map(([cx, cy]) => (
+              <g key={`${cx}-${cy}`} style={{ stroke: S2 }} strokeWidth="1">
+                <line x1={cx - 6} y1={cy} x2={cx + 6} y2={cy} />
+                <line x1={cx} y1={cy - 6} x2={cx} y2={cy + 6} />
+              </g>
+            ))}
+            {/* sparse edge ticks */}
+            <g style={{ stroke: S2 }} opacity="0.8">
+              {Array.from({ length: 4 }, (_, i) => {
+                const tx = FX + ((i + 1) * FW) / 5;
                 return (
-                  <circle
-                    key={ni}
-                    cx={cx}
-                    cy={cy}
-                    r="2.2"
-                    style={{ fill: "var(--bg)", stroke: GRAPHITE }}
-                    strokeWidth="1"
-                  />
+                  <g key={`t${tx}`}>
+                    <line x1={tx} y1={FY} x2={tx} y2={FY + 6} />
+                    <line x1={tx} y1={FY + FH - 6} x2={tx} y2={FY + FH} />
+                  </g>
                 );
               })}
             </g>
-          ))}
+          </motion.g>
 
-          {/* leader from CORE ACTIVE to W apex ring */}
-          <polyline
-            points="343,203 343,168 420,168"
-            style={{ stroke: S2 }}
-            {...NS}
-          />
+          <motion.g {...stage(T.grid)}>
+            <ellipse
+              cx="560"
+              cy="375"
+              rx="380"
+              ry="150"
+              transform="rotate(-2 560 375)"
+              style={{ stroke: S2 }}
+              strokeDasharray="1 8"
+              strokeLinecap="round"
+              {...NS}
+            />
+          </motion.g>
         </motion.g>
 
-        {/* ---------- labels ---------- */}
+        {/* ---------- construction grid (static anchor) ---------- */}
+        <motion.g pointerEvents="none" {...stage(T.grid)}>
+          <g style={{ opacity: wSel ? 1 : 0.55, transition: "opacity .35s" }}>
+            {/* shared baseline bus — W and ISTFY hang from one line */}
+            <line
+              x1={W_X - 20}
+              y1={BASE}
+              x2={WORD_END + 20}
+              y2={BASE}
+              style={{ stroke: S2 }}
+              {...NS}
+            />
+            {/* cap line for the extension */}
+            <line
+              x1={LETTERS[0].x - 14}
+              y1={TOP_S}
+              x2={WORD_END + 14}
+              y2={TOP_S}
+              style={{ stroke: S3 }}
+              {...NS}
+            />
+            {/* elevated cap of the W */}
+            <line
+              x1={W_X - 24}
+              y1={W_Y}
+              x2={W_X + W_W + 24}
+              y2={W_Y}
+              strokeDasharray="5 7"
+              style={{ stroke: S3 }}
+              {...NS}
+            />
+            {/* measurement ticks under the extension */}
+            <g style={{ stroke: S2 }}>
+              {Array.from({ length: 7 }, (_, i) => {
+                const tx =
+                  LETTERS[0].x + (i * (WORD_END - LETTERS[0].x)) / 6;
+                return (
+                  <line key={tx} x1={tx} y1={BASE + 12} x2={tx} y2={BASE + 17} />
+                );
+              })}
+            </g>
+            {/* core axis through the W */}
+            <line
+              x1={AXIS_X}
+              y1={FY}
+              x2={AXIS_X}
+              y2={BASE + 18}
+              strokeDasharray="3 6"
+              style={{ stroke: S3 }}
+              {...NS}
+            />
+            {/* dimension line under the W */}
+            <g style={{ stroke: S2 }}>
+              <line x1={W_X} y1={BASE + 32} x2={W_X + W_W_NARROWED} y2={BASE + 32} />
+              <line x1={W_X} y1={BASE + 26} x2={W_X} y2={BASE + 38} />
+              <line
+                x1={W_X + W_W_NARROWED}
+                y1={BASE + 26}
+                x2={W_X + W_W_NARROWED}
+                y2={BASE + 38}
+              />
+            </g>
+            <text
+              x={W_X + W_W + 12}
+              y={BASE + 36}
+              fontFamily="var(--font-jetbrains-mono), monospace"
+              fontSize="10"
+              letterSpacing="1.5"
+              style={{ fill: TEXT }}
+            >
+              246
+            </text>
+            {/* hover status chip */}
+            <g
+              style={{ opacity: wSel ? 1 : 0, transition: "opacity .3s" }}
+              fontFamily="var(--font-jetbrains-mono), monospace"
+              fontSize="11"
+              letterSpacing="2.5"
+            >
+              <rect x={W_X} y={BASE + 48} width="6" height="6" style={{ fill: ACCENT }} />
+              <text x={W_X + 16} y={BASE + 56} style={{ fill: ACCENT }}>
+                W / SELECTED
+              </text>
+            </g>
+          </g>
+        </motion.g>
+
+        {/* ---------- near layer: I S T F Y extension ---------- */}
+        <motion.g style={{ x: nearX, y: nearY }}>
+          <motion.g {...stage(T.istfy)}>
+            {LETTERS.map((l) => (
+              <g
+                key={l.key}
+                transform={`translate(${l.x} ${TOP_S}) scale(${K})`}
+              >
+                {l.paths.map((d, i) => (
+                  <path
+                    key={i}
+                    d={d}
+                    style={{ stroke: GRAPHITE }}
+                    strokeWidth={l.sw ?? 2.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    {...NS}
+                  />
+                ))}
+                {l.nodes.map((n, ni) => {
+                  if (n.kind === "foot") {
+                    return (
+                      <rect
+                        key={ni}
+                        x={n.x - 2}
+                        y={n.y - 2}
+                        width="4"
+                        height="4"
+                        style={{ fill: GRAPHITE }}
+                      />
+                    );
+                  }
+                  if (n.kind === "ring") {
+                    return (
+                      <circle
+                        key={ni}
+                        cx={n.x}
+                        cy={n.y}
+                        r="4.4"
+                        style={{ stroke: GRAPHITE }}
+                        strokeWidth="1.1"
+                        fill="var(--bg)"
+                      />
+                    );
+                  }
+                  return (
+                    <circle
+                      key={ni}
+                      cx={n.x}
+                      cy={n.y}
+                      r="2.2"
+                      style={{ fill: "var(--bg)", stroke: GRAPHITE }}
+                      strokeWidth="1"
+                    />
+                  );
+                })}
+              </g>
+            ))}
+          </motion.g>
+        </motion.g>
+
+        {/* ---------- W: primary identity element ---------- */}
+        <motion.g style={{ x: wX, y: wY }}>
+          <g transform={`translate(${W_X} ${W_Y}) scale(${W_S * W_NARROW} ${W_S})`}>
+            {/* hit area */}
+            <rect
+              x="-24"
+              y="-40"
+              width={W_W + 48}
+              height={W_H + 84}
+              fill="transparent"
+              pointerEvents="all"
+              data-cursor="SYS"
+              onMouseEnter={() => setWSel(true)}
+              onMouseLeave={() => setWSel(false)}
+            />
+
+            {/* node anchors appear first — the system defines its points */}
+            <g pointerEvents="none">
+              {/* terminals N1 / N5 — open rings */}
+              {[
+                { x: 0, y: 0, id: "N1" },
+                { x: 300, y: 10, id: "N5" },
+              ].map((v, i) => (
+                <motion.circle
+                  key={v.id}
+                  cx={v.x}
+                  cy={v.y}
+                  r="4.5"
+                  strokeWidth="1.2"
+                  fill="var(--bg)"
+                  style={{
+                    stroke: selStroke(GRAPHITE),
+                    transition: "stroke .3s",
+                  }}
+                  {...(!reduced
+                    ? {
+                        initial: { opacity: 0 },
+                        animate: { opacity: 1 },
+                        transition: { duration: 0.3, delay: T.nodes + i * 0.07 },
+                      }
+                    : {})}
+                />
+              ))}
+              {/* baseline vertices N2 / N4 — square contacts */}
+              {[
+                { x: 58, y: 264, id: "N2" },
+                { x: 232, y: 264, id: "N4" },
+              ].map((v, i) => (
+                <motion.rect
+                  key={v.id}
+                  x={v.x - 2.5}
+                  y={v.y - 2.5}
+                  width="5"
+                  height="5"
+                  style={{
+                    fill: selStroke("var(--bg)"),
+                    stroke: selStroke(GRAPHITE),
+                    transition: "fill .3s, stroke .3s",
+                  }}
+                  strokeWidth="1"
+                  {...(!reduced
+                    ? {
+                        initial: { opacity: 0 },
+                        animate: { opacity: 1 },
+                        transition: {
+                          duration: 0.3,
+                          delay: T.nodes + (i + 2) * 0.07,
+                        },
+                      }
+                    : {})}
+                />
+              ))}
+              {/* measurement point on the primary stroke */}
+              <motion.rect
+                x={MID_MEASURE.x - 1.5}
+                y={MID_MEASURE.y - 1.5}
+                width="3"
+                height="3"
+                style={{ fill: "var(--viz-dot)" }}
+                {...(!reduced
+                  ? {
+                      initial: { opacity: 0 },
+                      animate: { opacity: 1 },
+                      transition: { duration: 0.3, delay: T.nodes + 4 * 0.07 },
+                    }
+                  : {})}
+              />
+            </g>
+
+            {/* primary vector draws itself through the nodes */}
+            <motion.path
+              d={W_PATH}
+              pointerEvents="none"
+              style={{
+                stroke: "color-mix(in srgb, var(--fg) 92%, transparent)",
+              }}
+              strokeWidth="3.2"
+              strokeLinecap="butt"
+              strokeLinejoin="miter"
+              {...NS}
+              {...(!reduced
+                ? {
+                    initial: { pathLength: 0, opacity: 0 },
+                    animate: { pathLength: 1, opacity: 1 },
+                    transition: {
+                      pathLength: {
+                        duration: 0.6,
+                        delay: T.draw,
+                        ease: "easeInOut",
+                      },
+                      opacity: { duration: 0.2, delay: T.draw },
+                    },
+                  }
+                : {})}
+            />
+
+            {/* secondary construction — brightens when selected */}
+            <g
+              pointerEvents="none"
+              style={{ opacity: wSel ? 1 : 0, transition: "opacity .35s" }}
+            >
+              {/* diagonal terminal guides — right one intentionally incomplete */}
+              <line
+                x1="0"
+                y1="0"
+                x2="-4.7"
+                y2="-21.5"
+                strokeDasharray="2 6"
+                style={{ stroke: S2 }}
+                {...NS}
+              />
+              <line
+                x1="300"
+                y1="10"
+                x2="304.1"
+                y2="-5.5"
+                strokeDasharray="2 6"
+                style={{ stroke: S2 }}
+                {...NS}
+              />
+            </g>
+
+            {/* vertex labels — revealed on selection (fontSize compensates
+                the group scale so rendered size stays ~9) */}
+            <g
+              pointerEvents="none"
+              fontFamily="var(--font-jetbrains-mono), monospace"
+              fontSize="11"
+              letterSpacing="1"
+              style={{ opacity: wSel ? 1 : 0, transition: "opacity .3s", fill: TEXT }}
+            >
+              <text x="-10" y="-12" textAnchor="end">N1</text>
+              <text x="58" y="280" textAnchor="middle">N2</text>
+              <text x={CORE.x + 11} y={CORE.y + 6}>CORE</text>
+              <text x="232" y="280" textAnchor="middle">N4</text>
+              <text x="310" y="4">N5</text>
+            </g>
+
+            {/* the core — activates last */}
+            <g pointerEvents="none">
+              <circle cx={CORE.x} cy={CORE.y} r="7" style={{ stroke: GRAPHITE, opacity: 0.55 }} strokeWidth="1.1" fill="var(--bg)" />
+              <motion.circle
+                cx={CORE.x}
+                cy={CORE.y}
+                r="7"
+                style={{ stroke: ACCENT }}
+                strokeWidth="1.2"
+                fill="var(--bg)"
+                {...stage(T.core)}
+              />
+              <motion.circle
+                cx={CORE.x}
+                cy={CORE.y}
+                r="3.2"
+                style={{ fill: ACCENT }}
+                className="node-pulse"
+                {...stage(T.core)}
+              />
+            </g>
+          </g>
+        </motion.g>
+
+        {/* ---------- static labels (instrument chrome) ---------- */}
         <g
           fontFamily="var(--font-jetbrains-mono), monospace"
           fontSize="11"
           letterSpacing="2.5"
         >
-          <text x="44" y="62" style={{ fill: TEXT }}>
-            WISTFY / SYSTEM
-          </text>
-          <text
-            x={VBW - 44}
-            y="62"
-            textAnchor="end"
-            style={{ fill: ACCENT }}
-          >
-            CORE ACTIVE
-          </text>
-          <text x="44" y="592" style={{ fill: TEXT }}>
-            IDENTITY / 01
-          </text>
-          <text x={VBW - 44} y="592" textAnchor="end" style={{ fill: TEXT }}>
-            NODE: 26
-          </text>
-          <text
-            x={VBW - 34}
-            y="315"
-            textAnchor="middle"
-            transform={`rotate(90 ${VBW - 34} 315)`}
-            style={{ fill: TEXT }}
-          >
-            VECTOR FIELD
-          </text>
-          <text x="560" y="600" textAnchor="middle" style={{ fill: TEXT }}>
-            {`X:${String(coords.x).padStart(3, "0")} Y:${String(coords.y).padStart(3, "0")}`}
-          </text>
+          <motion.g {...stage(T.frame)}>
+            <text x="56" y="78" style={{ fill: TEXT }}>
+              WISTFY / SYSTEM
+            </text>
+          </motion.g>
+
+          <motion.g {...stage(T.chrome)}>
+            <text x={VBW - 56} y="66" textAnchor="end" style={{ fill: ACCENT }}>
+              CORE ACTIVE
+            </text>
+            <text
+              x={VBW - 56}
+              y="82"
+              textAnchor="end"
+              fontSize="9"
+              letterSpacing="1.5"
+              style={{ fill: TEXT }}
+            >
+              {`CORE · ${String(Math.round(CORE.x)).padStart(3, "0")},${String(Math.round(CORE.y)).padStart(3, "0")}`}
+            </text>
+          </motion.g>
+
+          <motion.g {...stage(T.chrome)}>
+            <text x="56" y={VBH - 26} style={{ fill: TEXT }}>
+              IDENTITY / 01
+            </text>
+            <text
+              x={VBW / 2}
+              y={VBH - 26}
+              textAnchor="middle"
+              style={{ fill: TEXT }}
+            >
+              {`X:${String(coords.x).padStart(3, "0")} Y:${String(coords.y).padStart(3, "0")}`}
+            </text>
+            <text x={VBW - 56} y={VBH - 26} textAnchor="end" style={{ fill: TEXT }}>
+              {`NODE: ${NODE_COUNT}`}
+            </text>
+          </motion.g>
         </g>
+
+        {/* VECTOR FIELD — rotated margin label */}
+        <motion.text
+          transform={`rotate(90 ${VBW - 68} 375)`}
+          x={VBW - 68}
+          y="375"
+          textAnchor="middle"
+          fontFamily="var(--font-jetbrains-mono), monospace"
+          fontSize="10"
+          letterSpacing="3"
+          style={{ fill: TEXT }}
+          {...stage(T.chrome)}
+        >
+          VECTOR FIELD
+        </motion.text>
       </svg>
     </div>
   );

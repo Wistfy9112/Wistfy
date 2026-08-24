@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import WistfyIdentity from "@/app/components/viz/WistfyIdentity";
+import SystemField from "@/app/components/sections/SystemField";
 import { site } from "@/app/data/site";
 
 const container = {
@@ -23,8 +24,10 @@ const item = {
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden">
-      <div className="mx-auto max-w-6xl px-5 pb-16 pt-32 md:px-8 md:pt-40">
-        <motion.div variants={container} initial="hidden" animate="show">
+      <div className="mx-auto max-w-6xl px-5 pb-8 pt-32 md:px-8 md:pb-10 md:pt-40">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(300px,38%)] lg:gap-16">
+          {/* ---------- left: the person ---------- */}
+          <motion.div variants={container} initial="hidden" animate="show">
           <motion.div
             variants={item}
             className="flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -66,7 +69,7 @@ export default function Hero() {
             <Link
               href="/#work"
               data-cursor="View"
-              className="group inline-flex items-center gap-2 bg-fg px-6 py-3.5 font-mono text-xs uppercase tracking-[0.18em] text-base transition-colors hover:bg-accent hover:text-white"
+              className="group inline-flex items-center gap-2 bg-fg px-6 py-3.5 font-mono text-xs uppercase tracking-[0.18em] text-base transition-colors hover:bg-accent hover:text-on-accent"
             >
               View Projects
               <ArrowUpRight
@@ -81,7 +84,24 @@ export default function Hero() {
               Contact
             </Link>
           </motion.div>
-        </motion.div>
+          </motion.div>
+
+          {/* ---------- right: the system ---------- */}
+          <div className="hidden lg:block" aria-hidden>
+            <SystemField />
+            {/* discovered connection — drops toward the WISTFY frame */}
+            <div className="relative h-16 md:h-20">
+              <span
+                className="absolute top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full border border-accent bg-base"
+                style={{ left: "78.8%" }}
+              />
+              <span
+                className="absolute top-1.5 h-full w-px bg-hair"
+                style={{ left: "78.8%" }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* identity system — full-width hero visual */}
@@ -89,7 +109,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 0.4, 0.2, 1] }}
-        className="mx-auto max-w-6xl px-5 pb-20 md:px-8"
+        className="mx-auto max-w-6xl px-5 pb-14 md:px-8 md:pb-20"
       >
         <WistfyIdentity />
       </motion.div>

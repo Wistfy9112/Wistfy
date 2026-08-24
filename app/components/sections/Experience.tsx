@@ -13,8 +13,11 @@ export default function Experience() {
 
         <ol className="relative border-t border-hair">
           {experience.map((e, i) => (
-            <Reveal key={e.year} delay={i * 0.05}>
-              <li className="group grid gap-x-10 gap-y-3 border-b border-hair py-9 transition-colors hover:bg-panel/40 md:grid-cols-[180px_1fr_220px] md:py-11">
+            <li key={e.year}>
+              <Reveal
+                delay={i * 0.05}
+                className="group grid gap-x-10 gap-y-3 border-b border-hair py-9 transition-colors hover:bg-panel/40 md:grid-cols-[180px_1fr_220px] md:py-11"
+              >
                 <div className="meta-label pt-1 text-accent">{e.year}</div>
                 <div>
                   <h3 className="text-xl font-semibold tracking-tight">
@@ -32,8 +35,8 @@ export default function Experience() {
                     </li>
                   ))}
                 </ul>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ol>
       </div>
