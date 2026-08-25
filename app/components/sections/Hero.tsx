@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import WistfyIdentity from "@/app/components/viz/WistfyIdentity";
-import SystemField from "@/app/components/sections/SystemField";
+import SystemField3D from "@/app/components/viz/SystemField3D";
 import { site } from "@/app/data/site";
 
 const container = {
@@ -25,7 +25,7 @@ export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden">
       <div className="mx-auto max-w-6xl px-5 pb-8 pt-32 md:px-8 md:pb-10 md:pt-40">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(300px,38%)] lg:gap-16">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,42%)] lg:gap-14 xl:gap-16">
           {/* ---------- left: the person ---------- */}
           <motion.div variants={container} initial="hidden" animate="show">
           <motion.div
@@ -88,7 +88,7 @@ export default function Hero() {
 
           {/* ---------- right: the system ---------- */}
           <div className="hidden lg:block" aria-hidden>
-            <SystemField />
+            <SystemField3D />
             {/* discovered connection — drops toward the WISTFY frame */}
             <div className="relative h-16 md:h-20">
               <span

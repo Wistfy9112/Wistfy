@@ -23,11 +23,23 @@ const GRID_PX = 88; /* bg-grid cell, globals.css background-size */
 const SVG_RENDER_W = 1000; /* max-w constraint on the component root */
 const UNIT_PX = SVG_RENDER_W / VBW; /* viewBox unit → css px at calibration */
 
-/* wordmark metrics — W leads, I S T F Y extends, grid-locked and
-   centered inside the frame: horizontal via measured span, vertical
-   via BASE derivation */
-const GAP = 30; /* W → I breathing */
-const TGAP = 22; /* inter-letter tracking — uniform, ink-to-ink */
+/* wordmark metrics — one constructed object, six glyphs on a shared
+   frame: every cell hangs from the same cap line (TOP_S), lands on the
+   same baseline bus (BASE) and shares one vertical center. Cell widths
+   come from the glyph definitions; spacing comes from the optical pair
+   table below — never from uniform tracking. */
+const GAP_AFTER: Record<string, number> = {
+  W: 16, /* W > I — the rising diagonal opens a white wedge under the
+            cap, so the cells tuck close at the top line */
+  I: 23, /* I > S — the S waist bulges toward the I mid-stem; snug at
+            the waist keeps the thin I from reading as a separator */
+  S: 23, /* S > T — the curve still gets air from its trailing
+            sidebearing plus T's overhanging cap arm */
+  T: 23, /* T > F — matched tracking; T's overhanging cap bar keeps
+            the pair visually locked despite the equal gap */
+  F: 23, /* F > Y — Y's arms lean away from the bar tip, echoing the
+            S>T rhythm so the tail keeps the same cadence */
+};
 
 const LETTER_CELLS = 2; /* ISTFY cap height = 2 cells = 176px */
 const LETTER_H = (LETTER_CELLS * GRID_PX) / UNIT_PX; /* 197.1 local units */
@@ -36,7 +48,7 @@ const W_CELLS = 2.5; /* W ink height = 2.5 cells = 220px */
 const W_INK_H = (W_CELLS * GRID_PX) / UNIT_PX; /* 246.4 local units */
 const W_S = W_INK_H / 264; /* construction path is 264 units tall */
 const W_W = 300 * W_S; /* unsqueezed ink width follows glyph aspect */
-const W_NARROW = W_INK_H / W_W; /* squeeze → square 2.5×2.5 ô bounding box */
+const W_NARROW = W_INK_H / W_W; /* squeeze → square 2.5×2.5 unit cell */
 const W_W_NARROWED = W_W * W_NARROW;
 const W_H = W_INK_H;
 
@@ -81,27 +93,29 @@ type Letter = {
 
 const LETTER_DEFS: Letter[] = [
   {
-    /* zero-based ink: advance == glyph width, uniform tracking stays optical */
+    /* zero-based ink: advance == glyph width; the wide cap bars give
+       the narrow stem a full visual cell without heavier strokes */
     key: "I",
-    w: 28,
-    paths: ["M14 0 V200", "M0 0 H28", "M0 200 H28"],
+    w: 44,
+    paths: ["M22 0 V200", "M0 0 H44", "M0 200 H44"],
     nodes: [
-      { x: 14, y: 100, kind: "dot" },
-      { x: 14, y: 200, kind: "foot" },
+      { x: 22, y: 100, kind: "dot" },
+      { x: 22, y: 200, kind: "foot" },
     ],
   },
   {
-    /* constructed S — mirrored bowls with cap/baseline overshoot; kept
-       narrower than the flat letters since curves read optically wider */
+    /* constructed S — rotationally symmetric bowls with cap/baseline
+       overshoot (±3) so the curves claim the same optical box as the
+       flat glyphs; extended horizontal terminals widen its footprint */
     key: "S",
-    w: 65,
+    w: 74,
     sw: 2.8,
     paths: [
-      "M55 10 C47 -1 38 -4 27 -2 C13 0 2 18 0 46 C-1 73 12 87 34 101 C56 114 64 128 64 156 C63 184 53 200 41 202 C27 201 13 196 7 188",
+      "M63 10 C57 -1 45 -4 32 -3 C15 -2 3 16 1.5 45 C0 72 13 86 36 100 C59 113 72 127 71 155 C70 184 57 202 41 203 C26 204 11 198 5 190",
     ],
     nodes: [
-      { x: 55, y: 10, kind: "dot" },
-      { x: 7, y: 188, kind: "dot" },
+      { x: 63, y: 10, kind: "dot" },
+      { x: 5, y: 190, kind: "dot" },
     ],
   },
   {
@@ -114,10 +128,15 @@ const LETTER_DEFS: Letter[] = [
     ],
   },
   {
+    /* F shares T's construction logic: stem inset 4 from the cell edge,
+       cap bar spanning the full cell, mid bar at 81% of the cell */
     key: "F",
-    w: 54,
-    paths: ["M4 200 V0 H54", "M4 78 H44"],
-    nodes: [{ x: 54, y: 0, kind: "dot" }],
+    w: 58,
+    paths: ["M4 200 V0 H58", "M4 78 H47"],
+    nodes: [
+      { x: 58, y: 0, kind: "dot" },
+      { x: 4, y: 200, kind: "foot" },
+    ],
   },
   {
     key: "Y",
@@ -132,26 +151,48 @@ const LETTER_DEFS: Letter[] = [
   },
 ];
 
-/* optical kerning — extra leading space before a glyph, in css px */
-const OPTICAL_KERN: Record<string, number> = { S: 5 };
-
-/* layout runs on a zero-origin axis so the span can be measured first,
-   then the word is pinned dead-center inside the frame */
-let relCursor = W_W_NARROWED + GAP;
-let kernCarry = 0;
+/* layout runs on a zero-origin axis pinned at the W's right edge so
+   the full span can be measured first, then the word is pinned
+   dead-center inside the frame; a +3u bias corrects the measured mass
+   centroid, which sits a hair right of the bounding-box center */
+let cursor = 0;
 const LETTERS = LETTER_DEFS.map((l) => {
-  kernCarry += (OPTICAL_KERN[l.key] ?? 0) / UNIT_PX;
-  const letter = { ...l, x: relCursor + kernCarry };
-  relCursor += l.w * K + TGAP;
+  const letter = { ...l, x: cursor };
+  cursor += l.w * K + (GAP_AFTER[l.key] ?? 0) / UNIT_PX;
   return letter;
 });
-const WORD_SPAN =
-  LETTERS[LETTERS.length - 1].x + LETTERS[LETTERS.length - 1].w * K;
+const EXTENSION_SPAN = cursor;
 
-const W_X = FX + (FW - WORD_SPAN) / 2;
+const W_I_GAP_U = GAP_AFTER.W / UNIT_PX;
+const FULL_SPAN = W_W_NARROWED + W_I_GAP_U + EXTENSION_SPAN;
+const W_X = FX + (FW - FULL_SPAN) / 2 + 3;
 const AXIS_X = W_X + 151 * W_S * W_NARROW;
-for (const l of LETTERS) l.x += W_X;
-const WORD_END = W_X + WORD_SPAN;
+for (const l of LETTERS) l.x += W_X + W_W_NARROWED + W_I_GAP_U;
+const WORD_END = W_X + FULL_SPAN;
+
+/* interval annotations — one quiet dimension bracket per pair, values
+   in calibrated css px */
+type Measure = { from: number; to: number; label: string };
+const MEASURES: Measure[] = (() => {
+  const seq: Array<{ key: string; right: number; left: number }> = [
+    { key: "W", right: W_X + W_W_NARROWED, left: W_X },
+    ...LETTERS.map((l) => ({
+      key: l.key,
+      right: l.x + l.w * K,
+      left: l.x,
+    })),
+  ];
+  const out: Measure[] = [];
+  for (let i = 0; i < seq.length - 1; i++) {
+    out.push({
+      from: seq[i].right,
+      to: seq[i + 1].left,
+      label: String(GAP_AFTER[seq[i].key]),
+    });
+  }
+  return out;
+})();
+const MEASURE_Y = TOP_S - 30; /* dimension band above the cap line */
 
 /* W structural network — asymmetric, sharp central apex.
    Standalone logo box: viewBox="0 0 300 264".
@@ -167,7 +208,7 @@ const MID_MEASURE = {
   y: (264 + CORE_Y) / 2,
 }; /* coordinate intersection on N2→core stroke */
 
-const NODE_COUNT = 26;
+const NODE_COUNT = 27;
 
 export default function WistfyIdentity() {
   const ref = useRef<HTMLDivElement>(null);
@@ -383,6 +424,33 @@ export default function WistfyIdentity() {
               </text>
             </g>
           </g>
+        </motion.g>
+
+        {/* ---------- interval measurements — one quiet bracket per pair ---------- */}
+        <motion.g pointerEvents="none" opacity="0.55" {...stage(T.grid)}>
+          <g style={{ stroke: S3 }}>
+            {MEASURES.map((m) => (
+              <g key={`b${m.from}-${m.to}`}>
+                <line x1={m.from} y1={MEASURE_Y} x2={m.to} y2={MEASURE_Y} {...NS} />
+                <line x1={m.from} y1={MEASURE_Y - 3} x2={m.from} y2={MEASURE_Y + 3} />
+                <line x1={m.to} y1={MEASURE_Y - 3} x2={m.to} y2={MEASURE_Y + 3} />
+              </g>
+            ))}
+          </g>
+          {MEASURES.map((m) => (
+            <text
+              key={`v${m.from}-${m.to}`}
+              x={(m.from + m.to) / 2}
+              y={MEASURE_Y - 6}
+              textAnchor="middle"
+              fontFamily="var(--font-jetbrains-mono), monospace"
+              fontSize="8.5"
+              letterSpacing="1"
+              style={{ fill: TEXT }}
+            >
+              {m.label}
+            </text>
+          ))}
         </motion.g>
 
         {/* ---------- near layer: I S T F Y extension ---------- */}
