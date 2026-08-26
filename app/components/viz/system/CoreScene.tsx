@@ -45,37 +45,46 @@ type RingDef = {
 };
 
 const RINGS: RingDef[] = [
-  /* the hero ring — electric blue, sweeping across the core */
-  { rx: 2.62, rz: 2.08, tx: 1.38, tz: -0.16, spin: 0.028, phase: 0, accent: true, opacity: 0.75 },
-  { rx: 3.18, rz: 1.62, tx: 1.12, tz: 0.5, spin: -0.02, phase: 1.2, opacity: 0.26 },
-  { rx: 2.95, rz: 2.62, tx: 0.92, tz: -0.68, spin: 0.016, phase: 2.4, opacity: 0.2 },
-  { rx: 3.72, rz: 2.24, tx: 1.44, tz: 0.14, spin: -0.012, phase: 0.7, opacity: 0.15 },
+  /* hero — electric blue, shallow sweep (must stay inside viewport) */
+  { rx: 2.22, rz: 1.48, tx: 0.28, tz: -0.14, spin: 0.018, phase: 0, accent: true, opacity: 0.88 },
+  /* steep dark ring — near-vertical, tight to the core */
+  { rx: 1.68, rz: 2.32, tx: 1.22, tz: 0.48, spin: -0.014, phase: 1.18, opacity: 0.42 },
+  /* outer — largest but still fully framed */
+  { rx: 2.42, rz: 1.72, tx: 0.32, tz: 0.1, spin: -0.009, phase: 0.68, opacity: 0.30 },
+  /* medium counter-tilt */
+  { rx: 2.08, rz: 1.88, tx: 0.35, tz: -0.62, spin: 0.012, phase: 2.35, opacity: 0.32 },
 ];
 
-/* dark riders pinned to the ring paths */
+/* dark riders pinned to the ring paths — positions tuned to the sheet */
 type RiderDef = { ring: number; t0: number; speed: number; size: number };
 
 const RIDERS: RiderDef[] = [
-  { ring: 0, t0: 1.1, speed: 0.06, size: 0.034 },
-  { ring: 0, t0: 4.4, speed: 0.05, size: 0.03 },
-  { ring: 1, t0: 0.3, speed: -0.045, size: 0.042 },
-  { ring: 1, t0: 2.2, speed: -0.04, size: 0.03 },
-  { ring: 1, t0: 3.9, speed: -0.05, size: 0.036 },
-  { ring: 1, t0: 5.4, speed: -0.036, size: 0.028 },
-  { ring: 2, t0: 0.9, speed: 0.038, size: 0.04 },
-  { ring: 2, t0: 2.8, speed: 0.033, size: 0.03 },
-  { ring: 2, t0: 4.7, speed: 0.043, size: 0.036 },
-  { ring: 3, t0: 1.7, speed: -0.026, size: 0.034 },
-  { ring: 3, t0: 3.6, speed: -0.022, size: 0.03 },
+  { ring: 0, t0: 0.95, speed: 0.055, size: 0.032 }, // left tail on the blue sweep
+  { ring: 0, t0: 3.08, speed: 0.048, size: 0.028 }, // near-surface, trailing the accent
+  { ring: 0, t0: 4.55, speed: 0.052, size: 0.03 },
+  { ring: 1, t0: 0.35, speed: -0.042, size: 0.038 }, // apex of the steep ring
+  { ring: 1, t0: 2.15, speed: -0.038, size: 0.03 },
+  { ring: 1, t0: 3.85, speed: -0.044, size: 0.034 },
+  { ring: 2, t0: 1.05, speed: -0.024, size: 0.032 },
+  { ring: 2, t0: 2.95, speed: -0.021, size: 0.028 },
+  { ring: 3, t0: 0.82, speed: 0.036, size: 0.036 },
+  { ring: 3, t0: 2.62, speed: 0.031, size: 0.03 },
+  { ring: 3, t0: 4.48, speed: 0.039, size: 0.034 },
 ];
 
-/* blue active node on the sphere surface — CORE ACTIVE */
+/* blue active nodes — one inside (CORE) slightly off-center, one on surface where the blue vector meets */
 const NODE_LAT = (15 * Math.PI) / 180;
 const NODE_LON = (38 * Math.PI) / 180;
 const SURFACE_NODE: [number, number, number] = [
   SPHERE_R * 1.005 * Math.cos(NODE_LAT) * Math.cos(NODE_LON),
   SPHERE_R * 1.005 * Math.sin(NODE_LAT),
   SPHERE_R * 1.005 * Math.cos(NODE_LAT) * Math.sin(NODE_LON),
+];
+/* inner CORE — translucent center, slightly off-center as per spec */
+const INNER_CORE: [number, number, number] = [
+  SPHERE_R * 0.18,
+  SPHERE_R * 0.1,
+  SPHERE_R * 0.22,
 ];
 
 /* ------------------------------------------------------------------ */
@@ -91,12 +100,12 @@ function CoreSphere({
   reduced: boolean;
   visRef: Props["visRef"];
 }) {
-  const shellMat = useRef<THREE.MeshPhysicalMaterial>(null);
+  const shellMat = useRef<THREE.MeshStandardMaterial>(null);
   const rimMat = useRef<THREE.MeshBasicMaterial>(null);
   const gratMat = useRef<THREE.LineBasicMaterial>(null);
-  const nodeMesh = useRef<THREE.Mesh>(null);
-  const nodeMat = useRef<THREE.MeshBasicMaterial>(null);
-  const streakMat = useRef<THREE.SpriteMaterial>(null);
+  const innerMesh = useRef<THREE.Mesh>(null);
+  const innerMat = useRef<THREE.MeshBasicMaterial>(null);
+  const innerGlow = useRef<THREE.SpriteMaterial>(null);
   const eased = useRef({ shell: 0, grat: 0, nodes: 0 });
   const hoverV = useRef(0);
 
@@ -117,7 +126,7 @@ function CoreSphere({
     g.setAttribute(
       "position",
       new THREE.BufferAttribute(
-        sphereWirePositions(SPHERE_R * 1.001, [-67.5, -45, -22.5, 0, 22.5, 45, 67.5], 12),
+        sphereWirePositions(SPHERE_R * 1.001, [-60, -30, 0, 30, 60], 8),
         3,
       ),
     );
@@ -143,23 +152,25 @@ function CoreSphere({
     hoverV.current += ((SYS_SHARED.hover.on ? 1 : 0) - hoverV.current) * 0.08;
     const hv = reduced ? 0 : hoverV.current;
 
-    if (shellMat.current) shellMat.current.opacity = 0.94 * smooth(es.shell);
-    if (rimMat.current) rimMat.current.opacity = 0.55 * smooth(es.shell);
-    if (gratMat.current)
-      gratMat.current.opacity = (0.07 + hv * 0.035) * smooth(es.grat);
+    if (shellMat.current) shellMat.current.opacity = 1.0 * smooth(es.shell);
+    if (rimMat.current) rimMat.current.opacity = (pal.bg.startsWith("rgb(250") ? 0.18 : 0.42) * smooth(es.shell);
+    if (gratMat.current) {
+      const isLight = pal.bg.startsWith("rgb(250") || pal.bg.startsWith("rgb(255");
+      gratMat.current.opacity =
+        (isLight ? 0.18 + hv * 0.04 : 0.07 + hv * 0.035) * smooth(es.grat);
+    }
 
     /* CORE ACTIVE — pulse quickens under hover */
-    const pulse =
-      1 + (reduced ? 0 : 0.18 * Math.sin(t * (1.9 + hv))) + hv * 0.22;
+    const innerPulse =
+      1 + (reduced ? 0 : 0.12 * Math.sin(t * 1.4 + 0.8)) + hv * 0.15;
 
-    if (nodeMesh.current)
-      nodeMesh.current.scale.setScalar(pulse * (0.4 + 0.6 * smooth(es.nodes)));
-    if (nodeMat.current)
-      nodeMat.current.opacity = Math.min(1, smooth(es.nodes) * (0.95 + hv * 0.05));
-    if (streakMat.current)
-      streakMat.current.opacity =
-        (0.34 + (reduced ? 0 : 0.08 * Math.sin(t * 1.6)) + hv * 0.2) *
-        smooth(es.nodes);
+    if (innerMesh.current)
+      innerMesh.current.scale.setScalar(innerPulse * (0.35 + 0.65 * smooth(es.nodes)));
+    if (innerMat.current)
+      innerMat.current.opacity = Math.min(0.9, smooth(es.nodes) * (0.85 + hv * 0.1));
+    if (innerGlow.current)
+      innerGlow.current.opacity =
+        (0.42 + (reduced ? 0 : 0.1 * Math.sin(t * 1.2)) + hv * 0.18) * smooth(es.nodes);
   });
 
   return (
@@ -173,21 +184,19 @@ function CoreSphere({
           SYS_SHARED.hover.on = false;
         }}
       >
-        <sphereGeometry args={[SPHERE_R, 56, 40]} />
-        <meshPhysicalMaterial
+        <sphereGeometry args={[SPHERE_R, 48, 32]} />
+        <meshStandardMaterial
           ref={shellMat}
           color={pal.sphere}
           transparent
           opacity={0}
-          roughness={0.55}
-          metalness={0.02}
-          clearcoat={0.25}
-          clearcoatRoughness={0.5}
+          roughness={0.62}
+          metalness={0.0}
         />
       </mesh>
       {/* inner rim — gives the glass its thickness */}
       <mesh>
-        <sphereGeometry args={[SPHERE_R * 0.985, 48, 32]} />
+        <sphereGeometry args={[SPHERE_R * 0.985, 32, 24]} />
         <meshBasicMaterial
           ref={rimMat}
           color={pal.sphereRim}
@@ -212,14 +221,15 @@ function CoreSphere({
       {/* the W heart — barely there, the identity at the center */}
       <WHeart pal={pal} reduced={reduced} visRef={visRef} />
 
-      {/* CORE ACTIVE — electric node on the surface */}
-      <mesh ref={nodeMesh} position={SURFACE_NODE} scale={0}>
-        <sphereGeometry args={[0.05, 16, 12]} />
-        <meshBasicMaterial ref={nodeMat} color={pal.accent} transparent opacity={0} />
+      {/* inner CORE — slightly off-center, translucent computational heart */}
+      <mesh ref={innerMesh} position={INNER_CORE} scale={0}>
+        <sphereGeometry args={[0.042, 16, 12]} />
+        <meshBasicMaterial ref={innerMat} color={pal.accent} transparent opacity={0} />
       </mesh>
       {glowTex && (
-        <sprite position={SURFACE_NODE} scale={[0.5, 0.5, 1]}>
+        <sprite position={INNER_CORE} scale={[0.38, 0.38, 1]}>
           <spriteMaterial
+            ref={innerGlow}
             map={glowTex}
             color={pal.accent}
             transparent
@@ -229,27 +239,15 @@ function CoreSphere({
           />
         </sprite>
       )}
-      {/* horizontal flare where the hero ring crosses the core */}
-      {glowTex && (
-        <sprite position={[0, SURFACE_NODE[1] * 0.6, 0.15]} scale={[3.1, 0.17, 1]}>
-          <spriteMaterial
-            ref={streakMat}
-            map={glowTex}
-            color={pal.accent}
-            transparent
-            opacity={0}
-            rotation={-0.1}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </sprite>
-      )}
+
+      {/* surface blue dot removed per request — sphere now clean */}
+      {/* removed interior blue streak — per feedback: no line originating from inside the sphere */}
       <pointLight
         color={pal.accent}
-        intensity={2.2}
-        distance={3.2}
+        intensity={1.6}
+        distance={2.4}
         decay={2}
-        position={[SURFACE_NODE[0] * 0.6, SURFACE_NODE[1], SURFACE_NODE[2] * 0.6]}
+        position={INNER_CORE}
       />
 
       {/* invisible hover volume */}
@@ -343,8 +341,8 @@ function Rings({
   const eased = useRef({ rings: 0, nodes: 0 });
 
   const ringPts = useMemo(() => RINGS.map((r) => ellipseClosed(r.rx, r.rz)), []);
-  /* bright front pass of the hero ring */
-  const brightPts = useMemo(() => arcSubset(RINGS[0].rx, RINGS[0].rz, -38, 42), []);
+  /* bright front pass of the hero ring — longer sweep as in the sheet */
+  const brightPts = useMemo(() => arcSubset(RINGS[0].rx, RINGS[0].rz, -48, 52), []);
 
   useFrame(({ clock }) => {
     if (!visRef.current) return;
@@ -395,7 +393,7 @@ function Rings({
           <Line
             points={ringPts[i]}
             color={r.accent ? pal.accent : pal.lineStrong}
-            lineWidth={r.accent ? 1.2 : 1}
+            lineWidth={r.accent ? 1.35 : 1}
             transparent
             opacity={0}
             ref={(el) => {
@@ -409,9 +407,9 @@ function Rings({
             <Line
               points={brightPts}
               color={pal.accent}
-              lineWidth={2}
+              lineWidth={2.4}
               transparent
-              opacity={0.85}
+              opacity={0.9}
               ref={(el) => {
                 if (el) {
                   const mat = (el as unknown as { material: THREE.Material }).material;
@@ -490,7 +488,8 @@ function AxisLine({
     const t = reduced ? FROZEN_T : et;
     eased.current += (stageP(reduced ? 10 : et, STAGE.energy) - eased.current) * 0.1;
     const e = smooth(eased.current);
-    if (lineMat.current) lineMat.current.opacity = 0.24 * e;
+    const isLight = pal.bg.startsWith("rgb(250") || pal.bg.startsWith("rgb(255");
+    if (lineMat.current) lineMat.current.opacity = (isLight ? 0.42 : 0.24) * e;
     if (diamondMat.current)
       diamondMat.current.opacity =
         0.8 * e * (reduced ? 1 : 0.85 + 0.15 * Math.sin(t * 1.3));
@@ -504,11 +503,11 @@ function AxisLine({
       <lineSegments geometry={axisGeo}>
         <lineBasicMaterial ref={lineMat} color={pal.lineStrong} transparent opacity={0} />
       </lineSegments>
-      <group position={[0, 2.32, 0]}>
+      <group position={[0, 2.38, 0]}>
         <Line
           points={diamond}
           color={pal.accent}
-          lineWidth={1.1}
+          lineWidth={1.25}
           transparent
           opacity={0}
           ref={(el) => {
@@ -518,7 +517,7 @@ function AxisLine({
           }}
         />
         {glowTex && (
-          <sprite scale={[0.34, 0.34, 1]}>
+          <sprite scale={[0.42, 0.42, 1]}>
             <spriteMaterial
               ref={apexGlow}
               map={glowTex}
@@ -595,8 +594,8 @@ function Platform({
     eased.current += (stageP(reduced ? 10 : et, STAGE.energy) - eased.current) * 0.1;
     const e = smooth(eased.current);
     if (spinG.current) spinG.current.rotation.y = -t * 0.015;
-    if (linesMat.current) linesMat.current.opacity = 0.17 * e;
-    if (shadowMat.current) shadowMat.current.opacity = (dark ? 0.32 : 0.13) * e;
+    if (linesMat.current) linesMat.current.opacity = (dark ? 0.17 : 0.34) * e;
+    if (shadowMat.current) shadowMat.current.opacity = (dark ? 0.32 : 0.18) * e;
     if (dotMat.current) dotMat.current.opacity = 0.95 * e;
     if (dotGlow.current)
       dotGlow.current.opacity =
@@ -675,8 +674,8 @@ function SystemRoot(props: Props) {
     /* gentle idle float — alive even untouched */
     const fx = props.reduced ? 0 : Math.sin(t * 0.12) * 0.045;
     const fy = props.reduced ? 0 : Math.sin(t * 0.09 + 1.1) * 0.03;
-    camera.position.set(c.cx + fx, 0.9 + c.cy + fy, 7.0);
-    camera.lookAt(0, -0.1, 0);
+    camera.position.set(c.cx + fx, 0.9 + c.cy + fy, 10.4);
+    camera.lookAt(0, -0.08, 0);
   });
 
   return (
@@ -699,18 +698,18 @@ export default function CoreScene({ pointerRef, visRef, reduced }: Props) {
   return (
     <Canvas
       dpr={[1, 1.75]}
-      camera={{ fov: 36, near: 0.1, far: 40, position: [0, 0.9, 7.0] }}
+      camera={{ fov: 30, near: 0.1, far: 40, position: [0, 0.9, 10.4] }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.NoToneMapping;
       }}
     >
-      <fog attach="fog" args={[pal.bg, 7.5, 12.5]} />
-      {/* soft studio light — upper-left key like the reference */}
-      <ambientLight intensity={0.4} />
-      <hemisphereLight args={[pal.white, pal.sphereRim, 0.75]} />
-      <directionalLight position={[-2.5, 3.5, 3.5]} intensity={0.75} />
-      <directionalLight position={[3, -1, -2]} intensity={0.12} />
+      <fog attach="fog" args={[pal.bg, 10.5, 17.0]} />
+      {/* soft studio light — airy, like the reference (not dark) */}
+      <ambientLight intensity={0.92} />
+      <hemisphereLight args={[pal.white, pal.sphereRim, 0.95]} />
+      <directionalLight position={[-2.2, 3.8, 3.2]} intensity={1.05} />
+      <directionalLight position={[2.8, -0.8, -1.8]} intensity={0.18} />
       <SystemRoot pointerRef={pointerRef} visRef={visRef} reduced={reduced} />
     </Canvas>
   );

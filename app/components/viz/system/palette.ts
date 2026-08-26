@@ -61,14 +61,15 @@ export function buildPalette(): Palette {
     bg: rgbStr(bg),
     fg: rgbStr(fg),
     accent: rgbStr(ac),
-    ink: rgbStr(mix(fg, bg, 0.12)),
-    lineStrong: rgbStr(mix(fg, bg, 0.52)),
-    lineMid: rgbStr(mix(fg, bg, 0.74)),
+    // theme-aware contrast: light bg needs darker strokes to stay visible on white
+    ink: rgbStr(mix(fg, bg, dark ? 0.12 : 0.08)),
+    lineStrong: rgbStr(mix(fg, bg, dark ? 0.52 : 0.32)),
+    lineMid: rgbStr(mix(fg, bg, dark ? 0.74 : 0.50)),
     white: dark ? "rgb(236,238,243)" : "rgb(48,50,56)",
-    graphite: rgbStr(mix(fg, bg, 0.22)),
-    /* pearl body in light mode, dark glass in dark mode */
-    sphere: dark ? "rgb(31,33,38)" : "rgb(226,229,234)",
-    sphereRim: dark ? "rgb(19,21,25)" : "rgb(198,202,209)",
+    graphite: rgbStr(mix(fg, bg, dark ? 0.22 : 0.14)),
+    // pearl sphere — translucent light with subtle blue tint; keep visible on white
+    sphere: dark ? "rgb(52,55,62)" : "rgb(232,238,245)",
+    sphereRim: dark ? "rgb(34,36,42)" : "rgb(208,213,222)",
   };
 }
 

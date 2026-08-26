@@ -170,29 +170,23 @@ const AXIS_X = W_X + 151 * W_S * W_NARROW;
 for (const l of LETTERS) l.x += W_X + W_W_NARROWED + W_I_GAP_U;
 const WORD_END = W_X + FULL_SPAN;
 
-/* interval annotations — one quiet dimension bracket per pair, values
-   in calibrated css px */
+/* dimension annotations — per-cell brackets above the cap line, matching
+   the reference sheet; values are sheet units summing to the total span */
 type Measure = { from: number; to: number; label: string };
-const MEASURES: Measure[] = (() => {
-  const seq: Array<{ key: string; right: number; left: number }> = [
-    { key: "W", right: W_X + W_W_NARROWED, left: W_X },
-    ...LETTERS.map((l) => ({
-      key: l.key,
-      right: l.x + l.w * K,
+const CELL_MEASURES: Measure[] = (() => {
+  const seq: Array<{ left: number; right: number; label: string }> = [
+    { left: W_X, right: W_X + W_W_NARROWED, label: "240" },
+    ...LETTERS.map((l, i) => ({
       left: l.x,
+      right: l.x + l.w * K,
+      label: ["144", "256", "232", "232", "248"][i] ?? "",
     })),
   ];
-  const out: Measure[] = [];
-  for (let i = 0; i < seq.length - 1; i++) {
-    out.push({
-      from: seq[i].right,
-      to: seq[i + 1].left,
-      label: String(GAP_AFTER[seq[i].key]),
-    });
-  }
-  return out;
+  return seq.map((s) => ({ from: s.left, to: s.right, label: s.label }));
 })();
 const MEASURE_Y = TOP_S - 30; /* dimension band above the cap line */
+const TOTAL_MEASURE_Y = BASE + 34;
+const TOTAL_LABEL = "1352";
 
 /* W structural network — asymmetric, sharp central apex.
    Standalone logo box: viewBox="0 0 300 264".
@@ -208,7 +202,7 @@ const MID_MEASURE = {
   y: (264 + CORE_Y) / 2,
 }; /* coordinate intersection on N2→core stroke */
 
-const NODE_COUNT = 27;
+const NODE_COUNT = 26;
 
 export default function WistfyIdentity() {
   const ref = useRef<HTMLDivElement>(null);
@@ -327,13 +321,27 @@ export default function WistfyIdentity() {
           <motion.g {...stage(T.grid)}>
             <ellipse
               cx="560"
-              cy="375"
-              rx="380"
-              ry="150"
-              transform="rotate(-2 560 375)"
+              cy="382"
+              rx="462"
+              ry="128"
+              transform="rotate(-2 560 382)"
               style={{ stroke: S2 }}
-              strokeDasharray="1 8"
+              strokeDasharray="1 9"
               strokeLinecap="round"
+              opacity={0.9}
+              {...NS}
+            />
+            {/* secondary faint orbit — adds the layered field feel of the reference */}
+            <ellipse
+              cx="560"
+              cy="385"
+              rx="398"
+              ry="92"
+              transform="rotate(-1.5 560 385)"
+              style={{ stroke: S3 }}
+              strokeDasharray="1 10"
+              strokeLinecap="round"
+              opacity={0.55}
               {...NS}
             />
           </motion.g>
@@ -390,26 +398,22 @@ export default function WistfyIdentity() {
               style={{ stroke: S3 }}
               {...NS}
             />
-            {/* dimension line under the W */}
-            <g style={{ stroke: S2 }}>
-              <line x1={W_X} y1={BASE + 32} x2={W_X + W_W_NARROWED} y2={BASE + 32} />
-              <line x1={W_X} y1={BASE + 26} x2={W_X} y2={BASE + 38} />
-              <line
-                x1={W_X + W_W_NARROWED}
-                y1={BASE + 26}
-                x2={W_X + W_W_NARROWED}
-                y2={BASE + 38}
-              />
+            {/* total span dimension — 1352 as in the reference sheet */}
+            <g style={{ stroke: S2 }} opacity="0.95">
+              <line x1={W_X} y1={TOTAL_MEASURE_Y} x2={WORD_END} y2={TOTAL_MEASURE_Y} {...NS} />
+              <line x1={W_X} y1={TOTAL_MEASURE_Y - 6} x2={W_X} y2={TOTAL_MEASURE_Y + 6} />
+              <line x1={WORD_END} y1={TOTAL_MEASURE_Y - 6} x2={WORD_END} y2={TOTAL_MEASURE_Y + 6} />
             </g>
             <text
-              x={W_X + W_W + 12}
-              y={BASE + 36}
+              x={(W_X + WORD_END) / 2}
+              y={TOTAL_MEASURE_Y + 14}
+              textAnchor="middle"
               fontFamily="var(--font-jetbrains-mono), monospace"
-              fontSize="10"
+              fontSize="9"
               letterSpacing="1.5"
               style={{ fill: TEXT }}
             >
-              246
+              {TOTAL_LABEL}
             </text>
             {/* hover status chip */}
             <g
@@ -426,22 +430,22 @@ export default function WistfyIdentity() {
           </g>
         </motion.g>
 
-        {/* ---------- interval measurements — one quiet bracket per pair ---------- */}
-        <motion.g pointerEvents="none" opacity="0.55" {...stage(T.grid)}>
+        {/* ---------- per-cell dimension brackets — one above each glyph cell ---------- */}
+        <motion.g pointerEvents="none" opacity="0.7" {...stage(T.grid)}>
           <g style={{ stroke: S3 }}>
-            {MEASURES.map((m) => (
+            {CELL_MEASURES.map((m) => (
               <g key={`b${m.from}-${m.to}`}>
                 <line x1={m.from} y1={MEASURE_Y} x2={m.to} y2={MEASURE_Y} {...NS} />
-                <line x1={m.from} y1={MEASURE_Y - 3} x2={m.from} y2={MEASURE_Y + 3} />
-                <line x1={m.to} y1={MEASURE_Y - 3} x2={m.to} y2={MEASURE_Y + 3} />
+                <line x1={m.from} y1={MEASURE_Y - 4} x2={m.from} y2={MEASURE_Y + 4} />
+                <line x1={m.to} y1={MEASURE_Y - 4} x2={m.to} y2={MEASURE_Y + 4} />
               </g>
             ))}
           </g>
-          {MEASURES.map((m) => (
+          {CELL_MEASURES.map((m) => (
             <text
               key={`v${m.from}-${m.to}`}
               x={(m.from + m.to) / 2}
-              y={MEASURE_Y - 6}
+              y={MEASURE_Y - 8}
               textAnchor="middle"
               fontFamily="var(--font-jetbrains-mono), monospace"
               fontSize="8.5"
@@ -603,14 +607,22 @@ export default function WistfyIdentity() {
               />
             </g>
 
-            {/* primary vector draws itself through the nodes */}
+            {/* hairline network under the ribbon — faint truss as in the sheet */}
+            <g pointerEvents="none" opacity={wSel ? 0.62 : 0.32} style={{ transition: "opacity .35s" }}>
+              <line x1="0" y1="0" x2={CORE.x} y2={CORE.y} style={{ stroke: GRAPHITE }} strokeWidth="0.9" {...NS} />
+              <line x1="300" y1="10" x2={CORE.x} y2={CORE.y} style={{ stroke: GRAPHITE }} strokeWidth="0.9" {...NS} />
+              <line x1="58" y1="264" x2={CORE.x} y2={CORE.y} style={{ stroke: GRAPHITE }} strokeWidth="0.7" opacity={0.6} {...NS} />
+              <line x1="232" y1="264" x2={CORE.x} y2={CORE.y} style={{ stroke: GRAPHITE }} strokeWidth="0.7" opacity={0.6} {...NS} />
+            </g>
+
+            {/* primary vector draws itself through the nodes — thick ribbon */}
             <motion.path
               d={W_PATH}
               pointerEvents="none"
               style={{
                 stroke: "color-mix(in srgb, var(--fg) 92%, transparent)",
               }}
-              strokeWidth="3.2"
+              strokeWidth="9.5"
               strokeLinecap="butt"
               strokeLinejoin="miter"
               {...NS}
@@ -720,7 +732,7 @@ export default function WistfyIdentity() {
               letterSpacing="1.5"
               style={{ fill: TEXT }}
             >
-              {`CORE · ${String(Math.round(CORE.x)).padStart(3, "0")},${String(Math.round(CORE.y)).padStart(3, "0")}`}
+              {`CORE = ${String(Math.round(CORE.x)).padStart(3, "0")}, ${String(Math.round(CORE.y)).padStart(3, "0")}`}
             </text>
           </motion.g>
 
@@ -742,10 +754,10 @@ export default function WistfyIdentity() {
           </motion.g>
         </g>
 
-        {/* VECTOR FIELD — rotated margin label */}
+        {/* VECTOR FIELD — rotated margin label, outside the viewport frame */}
         <motion.text
-          transform={`rotate(90 ${VBW - 68} 375)`}
-          x={VBW - 68}
+          transform={`rotate(90 ${VBW - 14} 375)`}
+          x={VBW - 14}
           y="375"
           textAnchor="middle"
           fontFamily="var(--font-jetbrains-mono), monospace"

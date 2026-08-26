@@ -23,7 +23,7 @@ const item = {
 
 export default function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden">
+    <section id="top" className="relative overflow-visible">
       <div className="mx-auto max-w-6xl px-5 pb-8 pt-32 md:px-8 md:pb-10 md:pt-40">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,42%)] lg:gap-14 xl:gap-16">
           {/* ---------- left: the person ---------- */}
@@ -37,7 +37,7 @@ export default function Hero() {
               <span className="meta-label text-dim">{site.status}</span>
             </span>
             <span className="meta-label text-faint">
-              {site.location} · {site.timezone}
+              {site.location} - {site.timezone}
             </span>
           </motion.div>
 
@@ -86,11 +86,11 @@ export default function Hero() {
           </motion.div>
           </motion.div>
 
-          {/* ---------- right: the system ---------- */}
-          <div className="hidden lg:block" aria-hidden>
+          {/* ---------- right: the system — 40-45% hero width, no container, inside grid */}
+          <div className="w-full" aria-hidden>
             <SystemField3D />
             {/* discovered connection — drops toward the WISTFY frame */}
-            <div className="relative h-16 md:h-20">
+            <div className="relative hidden h-16 md:h-20 lg:block">
               <span
                 className="absolute top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full border border-accent bg-base"
                 style={{ left: "78.8%" }}

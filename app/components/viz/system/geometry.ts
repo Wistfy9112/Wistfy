@@ -4,8 +4,8 @@ import * as THREE from "three";
    pearl sphere, fine graticule, sweeping elliptical orbits, vertical
    axis, concentric platform. */
 
-export const SPHERE_R = 1.55;
-export const PLATFORM_Y = -1.95;
+export const SPHERE_R = 1.08;
+export const PLATFORM_Y = -1.78;
 
 /* intro timeline — staged materialization ~1.6 s */
 export const STAGE = {
@@ -133,7 +133,7 @@ export function buildPlatformGeometry(): THREE.BufferGeometry {
   const pts: number[] = [];
   const seg = 96;
 
-  for (const r of [0.55, 0.95, 1.35]) {
+  for (const r of [0.52, 0.88, 1.26, 1.68]) {
     for (let i = 0; i < seg; i++) {
       const a0 = (i / seg) * Math.PI * 2;
       const a1 = ((i + 1) / seg) * Math.PI * 2;
@@ -151,14 +151,14 @@ export function buildPlatformGeometry(): THREE.BufferGeometry {
     const a = (i / 24) * Math.PI * 2;
     const c = Math.cos(a);
     const s = Math.sin(a);
-    pts.push(c * 1.42, 0, s * 1.42, c * 1.48, 0, s * 1.48);
+    pts.push(c * 1.68, 0, s * 1.68, c * 1.74, 0, s * 1.74);
   }
   for (let i = 0; i < 4; i++) {
     const a = (i / 4) * Math.PI * 2;
-    const cx = Math.cos(a) * 1.35;
-    const cz = Math.sin(a) * 1.35;
-    pts.push(cx - 0.04, 0, cz, cx + 0.04, 0, cz);
-    pts.push(cx, 0, cz - 0.04, cx, 0, cz + 0.04);
+    const cx = Math.cos(a) * 1.68;
+    const cz = Math.sin(a) * 1.68;
+    pts.push(cx - 0.045, 0, cz, cx + 0.045, 0, cz);
+    pts.push(cx, 0, cz - 0.045, cx, 0, cz + 0.045);
   }
 
   const geo = new THREE.BufferGeometry();

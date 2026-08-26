@@ -139,7 +139,7 @@ export default function SystemField3D() {
       ref={wrapRef}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      className="relative h-[420px] w-full select-none md:h-[520px] xl:h-[600px]"
+      className="relative -mr-[8%] h-[480px] w-[118%] select-none overflow-visible sm:h-[540px] md:h-[620px] xl:h-[680px] lg:-mr-[12%] lg:w-[128%]"
       role="img"
       aria-label="WISTFY system field — an interactive 3D core with orbital vectors, active nodes and a live coordinate field"
     >
@@ -158,20 +158,39 @@ export default function SystemField3D() {
       <div className="pointer-events-none absolute inset-0 font-mono text-[9px] uppercase tracking-[0.2em] text-[var(--viz-text)]">
         <motion.div
           {...hudStage(HUD_STAGE[1], reduced)}
-          className="absolute right-[8%] top-[24%] space-y-1.5 text-right"
+          className="absolute right-[9%] top-[18%] space-y-1.5 text-right"
         >
           <p>SYS.FIELD</p>
           <p className="text-accent">CORE ACTIVE</p>
           <p>NODES: 84</p>
-          <p>VECTOR: N7</p>
+          <p>VECTOR: 07</p>
           <p>RES: 1.618</p>
+          {/* leader line toward the core — as in the reference sheet */}
+          <span
+            aria-hidden
+            className="absolute right-full top-[15px] mr-2 hidden h-px w-[62px] bg-[var(--viz-s2)] md:block"
+          />
+          <span
+            aria-hidden
+            className="absolute right-full top-[15px] mr-[64px] hidden h-[26px] w-px bg-[var(--viz-s2)] md:block"
+          />
+          <span
+            aria-hidden
+            className="absolute right-full top-[41px] mr-[64px] hidden h-1 w-1 -translate-x-1/2 rounded-full bg-[var(--viz-dot)] md:block"
+          />
         </motion.div>
 
         <motion.p
           {...hudStage(HUD_STAGE[2], reduced)}
-          className="absolute bottom-[14%] right-[6%]"
+          className="absolute bottom-[14%] right-[6%] flex gap-2"
         >
-          X:<span ref={xRef}>360</span> Y:<span ref={yRef}>180</span>
+          <span>
+            X:<span ref={xRef}>721</span>
+          </span>
+          <span>
+            Y:<span ref={yRef}>285</span>
+          </span>
+          <span className="hidden sm:inline">Z:180</span>
         </motion.p>
 
         <motion.span
