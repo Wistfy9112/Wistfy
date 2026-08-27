@@ -67,9 +67,9 @@ export function buildPalette(): Palette {
     lineMid: rgbStr(mix(fg, bg, dark ? 0.74 : 0.50)),
     white: dark ? "rgb(236,238,243)" : "rgb(48,50,56)",
     graphite: rgbStr(mix(fg, bg, dark ? 0.22 : 0.14)),
-    // pearl sphere — translucent light with subtle blue tint; keep visible on white
-    sphere: dark ? "rgb(52,55,62)" : "rgb(232,238,245)",
-    sphereRim: dark ? "rgb(34,36,42)" : "rgb(208,213,222)",
+    // WISTFY CORE — smoky translucent glass; dark feels like charcoal smoke, light stays airy
+    sphere: dark ? "rgb(42,44,52)" : "rgb(222,227,235)",
+    sphereRim: dark ? "rgb(26,28,34)" : "rgb(198,204,217)",
   };
 }
 
