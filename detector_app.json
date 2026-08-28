@@ -1,0 +1,89 @@
+﻿[
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\layout\\CursorRing.tsx",
+    "line": 82,
+    "snippet": "text-[ΓÇª] class: 9px is off the DESIGN.md type ramp",
+    "ignoreValue": "9px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\sections\\Work.tsx",
+    "line": 48,
+    "snippet": "text-[ΓÇª] class: 15px is off the DESIGN.md type ramp",
+    "ignoreValue": "15px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\sections\\Work.tsx",
+    "line": 117,
+    "snippet": "text-[ΓÇª] class: 2.6rem is off the DESIGN.md type ramp",
+    "ignoreValue": "2.6rem"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\sections\\Work.tsx",
+    "line": 126,
+    "snippet": "text-[ΓÇª] class: 15px is off the DESIGN.md type ramp",
+    "ignoreValue": "15px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\sections\\Work.tsx",
+    "line": 126,
+    "snippet": "text-[ΓÇª] class: 15.5px is off the DESIGN.md type ramp",
+    "ignoreValue": "15.5px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\viz\\SystemField3D.tsx",
+    "line": 23,
+    "snippet": "text-[ΓÇª] class: 9px is off the DESIGN.md type ramp",
+    "ignoreValue": "9px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\Project\\Wistfy\\app\\components\\viz\\SystemField3D.tsx",
+    "line": 158,
+    "snippet": "text-[ΓÇª] class: 9px is off the DESIGN.md type ramp",
+    "ignoreValue": "9px"
+  },
+  {
+    "antipattern": "codex-grid-background",
+    "name": "Decorative grid-line background",
+    "description": "A decorative grid or line-field background drawn with hairline linear-gradient layers tiled by a fixed pixel cell is a recurring generated-UI signature. Reserve grid overlays for actual canvas, map, blueprint, or measurement surfaces; elsewhere use product structure or a plain surface.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "D:\\Project\\Wistfy\\app\\globals.css",
+    "line": 134,
+    "snippet": "two-axis grid-line gradient background"
+  }
+]

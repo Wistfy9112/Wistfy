@@ -49,10 +49,6 @@ function Frame({ children }: { children: React.ReactNode }) {
         <line x1="16" y1="12" x2="16" y2="196" />
       </g>
       {children}
-      <g fontFamily="var(--font-jetbrains-mono), monospace" fontSize="9" letterSpacing="1.5">
-        <text x="16" y="212" style={{ fill: TEXT }}>FIG</text>
-        <text x="352" y="212" style={{ fill: TEXT }}>01</text>
-      </g>
     </svg>
   );
 }

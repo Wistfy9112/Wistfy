@@ -68,7 +68,7 @@ export default function Work() {
 
                       <Link
                         href={`/projects/${project.slug}`}
-                        className="meta-label inline-flex items-center gap-2 self-start border border-edge px-3 py-2 text-accent transition-colors hover:border-accent hover:bg-accent hover:text-on-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base group-hover:border-accent group-hover:bg-accent group-hover:text-on-accent"
+                        className="meta-label inline-flex items-center gap-2 self-start border border-hair px-3 py-2 text-accent transition-colors hover:border-accent hover:bg-accent hover:text-on-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base group-hover:border-accent group-hover:bg-accent group-hover:text-on-accent"
                       >
                         Read case study
                         <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
