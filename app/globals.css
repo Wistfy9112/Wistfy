@@ -14,14 +14,14 @@
   --hair: rgba(255, 255, 255, 0.07);
   --edge: rgba(255, 255, 255, 0.14);
 
-  --accent: #5b8cff;
+  --accent: #4d8dff;
   --amber: #e0915a;
   --mint: #b7e05a;
   --iris: #9b8afb;
   --on-accent: #060607;
 
   --grid-line: rgba(255, 255, 255, 0.024);
-  --glow: rgba(91, 140, 255, 0.07);
+  --glow: rgba(77, 141, 255, 0.07);
 
   --viz-s1: rgba(255, 255, 255, 0.17);
   --viz-s2: rgba(255, 255, 255, 0.08);
