@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-28T09:26:57.391Z",
+  "title": "Design System: Wistfy — Portfolio for Vo Huy",
+  "extensions": {
+    "colorMeta": {
+      "signal-blue": {
+        "role": "primary",
+        "displayName": "Signal Blue",
+        "canonical": "#4d8dff",
+        "tonalRamp": [
+          "#0b1e4a",
+          "#143a86",
+          "#1e56c2",
+          "#2f5fe8",
+          "#4d8dff",
+          "#7aa4ff",
+          "#a8c1ff",
+          "#d6e0ff"
+        ]
+      },
+      "signal-blue-light": {
+        "role": "primary",
+        "displayName": "Signal Blue Light",
+        "canonical": "#2f5fe8",
+        "tonalRamp": [
+          "#0b1e4a",
+          "#143a86",
+          "#1e56c2",
+          "#2f5fe8",
+          "#4d8dff",
+          "#7aa4ff",
+          "#a8c1ff",
+          "#d6e0ff"
+        ]
+      },
+      "amber-signal": {
+        "role": "secondary",
+        "displayName": "Amber Signal",
+        "canonical": "#e0915a",
+        "tonalRamp": [
+          "#3b1f0a",
+          "#6b3612",
+          "#9b4d1b",
+          "#b06a2e",
+          "#e0915a",
+          "#e8ac84",
+          "#f0c9ad",
+          "#f9e6d6"
+        ]
+      },
+      "mint-signal": {
+        "role": "secondary",
+        "displayName": "Mint Signal",
+        "canonical": "#b7e05a",
+        "tonalRamp": [
+          "#1e2e0a",
+          "#3d5c14",
+          "#5c8f1d",
+          "#7ab528",
+          "#b7e05a",
+          "#cde78c",
+          "#e2eebb",
+          "#f3f8e0"
+        ]
+      },
+      "iris-signal": {
+        "role": "tertiary",
+        "displayName": "Iris Signal",
+        "canonical": "#9b8afb",
+        "tonalRamp": [
+          "#1b0f3d",
+          "#2e1f66",
+          "#4a2f99",
+          "#6f52e0",
+          "#9b8afb",
+          "#b5a6fc",
+          "#cfc3fd",
+          "#e9e3fe"
+        ]
+      },
+      "graphite-base": {
+        "role": "neutral",
+        "displayName": "Graphite Base",
+        "canonical": "#0a0a0b",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#101013",
+          "#16161a",
+          "#1e1e22",
+          "#2a2a2e",
+          "#3a3a3f",
+          "#6e6e78",
+          "#f5f5f5"
+        ]
+      },
+      "graphite-panel": {
+        "role": "neutral",
+        "displayName": "Graphite Panel",
+        "canonical": "#101013",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#101013",
+          "#16161a",
+          "#1e1e22",
+          "#2a2a2e",
+          "#3a3a3f",
+          "#6e6e78",
+          "#f5f5f5"
+        ]
+      },
+      "graphite-raised": {
+        "role": "neutral",
+        "displayName": "Graphite Raised",
+        "canonical": "#16161a",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#101013",
+          "#16161a",
+          "#1e1e22",
+          "#2a2a2e",
+          "#3a3a3f",
+          "#6e6e78",
+          "#f5f5f5"
+        ]
+      },
+      "graphite-fg": {
+        "role": "neutral",
+        "displayName": "Graphite Foreground",
+        "canonical": "#f5f5f5",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#101013",
+          "#16161a",
+          "#55555c",
+          "#8a8a8a",
+          "#7d7d86",
+          "#b0b0b5",
+          "#f5f5f5"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(255, 255, 255, 0.07)",
+        "tonalRamp": [
+          "rgba(255,255,255,0.04)",
+          "rgba(255,255,255,0.07)",
+          "rgba(255,255,255,0.10)",
+          "rgba(255,255,255,0.14)",
+          "rgba(255,255,255,0.18)",
+          "rgba(255,255,255,0.24)",
+          "rgba(255,255,255,0.36)",
+          "rgba(255,255,255,0.55)"
+        ]
+      },
+      "edge": {
+        "role": "neutral",
+        "displayName": "Edge",
+        "canonical": "rgba(255, 255, 255, 0.14)",
+        "tonalRamp": [
+          "rgba(255,255,255,0.07)",
+          "rgba(255,255,255,0.10)",
+          "rgba(255,255,255,0.14)",
+          "rgba(255,255,255,0.18)",
+          "rgba(255,255,255,0.24)",
+          "rgba(255,255,255,0.32)",
+          "rgba(255,255,255,0.45)",
+          "rgba(255,255,255,0.60)"
+        ]
+      },
+      "glow": {
+        "role": "neutral",
+        "displayName": "Glow",
+        "canonical": "rgba(77, 141, 255, 0.07)",
+        "tonalRamp": [
+          "rgba(77,141,255,0.03)",
+          "rgba(77,141,255,0.05)",
+          "rgba(77,141,255,0.07)",
+          "rgba(77,141,255,0.12)",
+          "rgba(77,141,255,0.18)",
+          "rgba(77,141,255,0.28)",
+          "rgba(77,141,255,0.40)",
+          "rgba(77,141,255,0.60)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero name VO HUY only — confident, tight -0.035em."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headlines — editorial, measured."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project and timeline titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Narrative copy 52-75ch, readable on graphite."
+      },
+      "label": {
+        "displayName": "Label / Mono",
+        "purpose": "Instrument layer — metadata, coordinates, system states, uppercase 11px/0.18em."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glow-core",
+        "value": "0 0 24px rgba(77, 141, 255, 0.18)",
+        "purpose": "Core sprite glow — only on active/blue signal elements."
+      },
+      {
+        "name": "glow-outer",
+        "value": "0 0 40px rgba(77, 141, 255, 0.07)",
+        "purpose": "Diffuse outer field haze — ambient, not per-component."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.22, 0.4, 0.2, 1)",
+        "purpose": "Default entrance and state easing for reveals."
+      },
+      {
+        "name": "ease-spring-soft",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Spring for nav active indicator and timeline line."
+      },
+      {
+        "name": "duration-entrance",
+        "value": "520ms",
+        "purpose": "Hero item entrance duration."
+      },
+      {
+        "name": "duration-hover",
+        "value": "250ms",
+        "purpose": "Hover color/border transitions."
+      },
+      {
+        "name": "pulse-node",
+        "value": "3.6s ease-in-out infinite",
+        "purpose": "Node pulse opacity 0.35→1."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Instrument primary action — graphite fill that becomes Signal Blue on hover.",
+      "html": "<button class=\"ds-btn-primary\">View Projects <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M7 17L17 7M17 7H7m10 0v10\"/></svg></button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#f5f5f5;color:#0a0a0b;padding:14px 24px;border:none;border-radius:2px;font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;min-height:44px;transition:background 0.25s,color 0.25s;}.ds-btn-primary:hover{background:#4d8dff;color:#060607;}.ds-btn-primary:focus-visible{outline:2px solid #4d8dff;outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Primary Button Hover",
+      "kind": "button",
+      "refersTo": "button-primary-hover",
+      "description": "Hover state of primary button — Signal Blue.",
+      "html": "<button class=\"ds-btn-primary-hover\">View Projects</button>",
+      "css": ".ds-btn-primary-hover{display:inline-flex;align-items:center;gap:8px;background:#4d8dff;color:#060607;padding:14px 24px;border:none;border-radius:2px;font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Quiet secondary — edge border, dim text, becomes accent border on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Contact</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#8a8a8a;padding:14px 24px;border:1px solid rgba(255,255,255,0.14);border-radius:2px;font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;min-height:44px;transition:border-color 0.25s,color 0.25s;}.ds-btn-secondary:hover{border-color:#4d8dff;color:#f5f5f5;}.ds-btn-secondary:focus-visible{outline:2px solid #4d8dff;outline-offset:3px;}"
+    },
+    {
+      "name": "Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Calibration tag — mono small chip for stack items.",
+      "html": "<span class=\"ds-tag\">PostgreSQL</span>",
+      "css": ".ds-tag{display:inline-block;background:transparent;color:#8a8a8a;border:1px solid rgba(255,255,255,0.14);padding:4px 10px;border-radius:2px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:0.08em;}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Tonal panel card — flat at rest, edge border on hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-media\"></div><span class=\"ds-card-caption\">FIG.01</span></div>",
+      "css": ".ds-card{background:rgba(16,16,19,0.5);border:1px solid rgba(255,255,255,0.07);border-radius:2px;padding:16px;transition:border-color 0.5s;} .ds-card:hover{border-color:rgba(255,255,255,0.14);} .ds-card-media{aspect-ratio:400/240;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);} .ds-card-caption{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#7d7d86;margin-top:12px;display:block;text-align:right;}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Top bar nav link — mono, dim→fg, accent underline when active.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link-active\" href=\"#work\">Work</a><a class=\"ds-nav-link\" href=\"#about\">About</a><a class=\"ds-nav-link\" href=\"#lab\">Lab</a></nav>",
+      "css": ".ds-nav{display:flex;gap:4px;align-items:center;height:64px;padding:0 32px;background:#0a0a0b;border-bottom:1px solid rgba(255,255,255,0.07);} .ds-nav-link{color:#8a8a8a;padding:8px 16px;font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;position:relative;transition:color 0.2s;} .ds-nav-link:hover{color:#f5f5f5;} .ds-nav-link-active{color:#f5f5f5;} .ds-nav-link-active::after{content:'';position:absolute;left:16px;right:16px;bottom:-1px;height:1px;background:#4d8dff;}"
+    },
+    {
+      "name": "Section Header",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Index capsule with label, faint index, hairline rule, headline and lede.",
+      "html": "<div class=\"ds-section-header\"><div class=\"ds-section-header-top\"><span class=\"ds-label-accent\">Selected work</span><span class=\"ds-label-faint\">/ 02</span><span class=\"ds-hair-rule\"></span></div><h2 class=\"ds-headline\">Systems built, shipped and measured</h2><p class=\"ds-lede\">Four projects that show how I work end to end.</p></div>",
+      "css": ".ds-section-header{padding:0;max-width:1152px;} .ds-section-header-top{display:flex;align-items:center;gap:16px;} .ds-label-accent{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#4d8dff;} .ds-label-faint{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#7d7d86;} .ds-hair-rule{flex:1;height:1px;background:rgba(255,255,255,0.07);} .ds-headline{margin-top:32px;font-family:Geist,sans-serif;font-size:48px;font-weight:600;line-height:1.04;letter-spacing:-0.02em;color:#f5f5f5;max-width:48rem;} .ds-lede{margin-top:24px;max-width:42rem;font-size:18px;line-height:1.6;color:#8a8a8a;}"
+    },
+    {
+      "name": "Meta Label",
+      "kind": "custom",
+      "refersTo": "tag",
+      "description": "Instrument label — 11px mono uppercase 0.18em for all metadata.",
+      "html": "<span class=\"ds-meta-label\">Available for opportunities</span>",
+      "css": ".ds-meta-label{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#8a8a8a;display:inline-flex;align-items:center;gap:8px;}"
+    },
+    {
+      "name": "Timeline Node",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Vertical timeline node — accent dot on hairline with label.",
+      "html": "<div class=\"ds-timeline\"><span class=\"ds-timeline-line\"></span><div class=\"ds-timeline-item\"><span class=\"ds-timeline-dot\"></span><span class=\"ds-meta-label\" style=\"color:#4d8dff\">2021</span><h3 class=\"ds-timeline-title\">Research / Publication</h3></div></div>",
+      "css": ".ds-timeline{position:relative;padding-left:32px;border-left:1px solid rgba(255,255,255,0.07);} .ds-timeline-dot{position:absolute;left:-4px;top:6px;width:7px;height:7px;border-radius:9999px;border:1px solid #4d8dff;background:#0a0a0b;} .ds-timeline-title{margin-top:8px;font-family:Geist,sans-serif;font-size:20px;font-weight:600;letter-spacing:-0.015em;color:#f5f5f5;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Precision Field",
+    "overview": "The portfolio is an instrument, not a marketing page. A graphite field holds a calibrated system: an 88px construction grid, thin engineering linework, node constellations, and a volumetric core that only glows when it has something to say. The atmosphere is distinct without being loud — every dot, bracket, and orbital line earns its place by proving how Vo Huy thinks: whole-system, measured, and deliberately constrained. Make complexity feel intentional, not complicated. Make technology feel sophisticated, not flashy.",
+    "keyCharacteristics": [
+      "Graphite carries the system; Signal Blue reveals the system",
+      "88px instrument grid is datum for all construction geometry",
+      "Flat and quiet at rest. Spatial and alive in motion",
+      "Mono as calibrated instrument, Sans as confident human voice",
+      "Zero-stock-imagery — all visuals are generative code"
+    ],
+    "rules": [
+      {
+        "name": "The Signal Rarity Rule",
+        "body": "Signal Blue appears on ≤10% of any viewport at rest. If you can remove the blue and still understand the section, remove it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Graphite Depth Rule",
+        "body": "Depth comes from tonal steps Base → Panel → Raised and hair→edge border strength, not from shadow.",
+        "section": "colors"
+      },
+      {
+        "name": "The 10% Uppercase Rule",
+        "body": "Uppercase mono is only for labels ≤28 characters. Never set a sentence or lede in meta-label.",
+        "section": "typography"
+      },
+      {
+        "name": "The Measure Rule",
+        "body": "Body never exceeds 75ch; narrative sections cap at 52-65ch. Wider is not more readable — it's drift.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-At-Rest Rule",
+        "body": "Surfaces are flat at rest. Glow, brightness, or elevated tone appears only as response to hover, focus, active, or scroll-driven state.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Glow Rule",
+        "body": "Only one Signal Blue glow source per viewport at rest. If two would glow, demote one to viz-s2.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do let Graphite carry depth and Signal Blue signal action — ≤10% blue per viewport.",
+      "Do keep surfaces flat at rest; reveal depth only on hover/focus/scroll (glow, tonal step, border-edge).",
+      "Do use the 88px grid for construction alignment; every viz measurement derives from it.",
+      "Do keep body ≤75ch and narrative ≤52-65ch; wider is not more credible.",
+      "Do gate all motion and cursor illusions behind prefers-reduced-motion and pointer:fine.",
+      "Do keep mono labels ≤28 chars, uppercase, 0.18em tracking.",
+      "Do theme browser surfaces — ::selection accent/on-accent, scrollbar edge thumb, focus ring 2px accent.",
+      "Do use gap for sibling rhythm and border-hair for quiet division between items."
+    ],
+    "donts": [
+      "Don't add gradient text, glass/blur decoration, thick left accent borders (>1px), or hard 4px 4px offset shadows.",
+      "Don't introduce large rounding (rounded-xl/2xl), sparklines/progress rings, or soft-shadowed rounded cards as structure.",
+      "Don't use mono as costume for running copy — reserved for labels, code, coordinates, and system states.",
+      "Don't split Signal Blue into multiple hues per screen or pair amber+mint+iris decoratively — one contextual signal at a time.",
+      "Don't add a kicker/eyebrow above a headline — heading carries its own weight.",
+      "Don't deposit 3D/glow as wallpaper — one glow source per viewport at rest; field height capped 340→540 / 52vh.",
+      "Don't invent testimonials, metrics, or project imagery — all visuals are generative; all claims trace to app/data/*."
+    ]
+  }
+}

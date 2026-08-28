@@ -89,7 +89,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         {children}
-      </body>
+      {/* impeccable-live-start */}
+<script src="http://localhost:8400/live.js?token=0a9f03d9-f040-4c14-8a6f-991b312e96f9"></script>
+{/* impeccable-live-end */}
+</body>
     </html>
   );
 }

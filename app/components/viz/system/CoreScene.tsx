@@ -41,9 +41,9 @@ type OrbitDef = {
 };
 
 const ORBITS: OrbitDef[] = [
-  { radius: HERO_SPHERE_R * 1.215, euler: [0.34, 0.16, 0], accent: true, opacity: 0.88, width: 1.42, spin: 0.006 },
-  { radius: HERO_SPHERE_R * 1.38, euler: [1.18, 0.52, 0.12], accent: false, opacity: 0.34, width: 0.72, spin: -0.0045 },
-  { radius: HERO_SPHERE_R * 1.56, euler: [-0.58, -0.46, 0.08], accent: false, opacity: 0.26, width: 0.62, spin: 0.0035 },
+  { radius: HERO_SPHERE_R * 1.215, euler: [0.34, 0.16, 0], accent: true, opacity: 0.58, width: 1.32, spin: 0.006 },
+  { radius: HERO_SPHERE_R * 1.38, euler: [1.18, 0.52, 0.12], accent: false, opacity: 0.24, width: 0.68, spin: -0.0045 },
+  { radius: HERO_SPHERE_R * 1.56, euler: [-0.58, -0.46, 0.08], accent: false, opacity: 0.18, width: 0.58, spin: 0.0035 },
 ];
 
 type NodeDef = {
@@ -398,31 +398,31 @@ function EnergyCore({ pal, reduced, visRef }: { pal: Palette; reduced: boolean; 
     const isDark = darkCheck(pal);
 
     if (shellMat.current) {
-      shellMat.current.opacity = (isDark ? 0.052 : 0.11) * sShell * (1 + hv * 0.2);
+      shellMat.current.opacity = (isDark ? 0.036 : 0.075) * sShell * (1 + hv * 0.2);
     }
-    if (rimMat.current) rimMat.current.opacity = (isDark ? 0.13 : 0.20) * sShell;
-    if (pointsMat.current) pointsMat.current.opacity = (isDark ? 0.20 : 0.42) * sPts * (0.9 + hv * 0.14);
-    if (innerPtsMatRef.current) innerPtsMatRef.current.opacity = (isDark ? 0.10 : 0.22) * sPts;
+    if (rimMat.current) rimMat.current.opacity = (isDark ? 0.10 : 0.15) * sShell;
+    if (pointsMat.current) pointsMat.current.opacity = (isDark ? 0.14 : 0.30) * sPts * (0.9 + hv * 0.14);
+    if (innerPtsMatRef.current) innerPtsMatRef.current.opacity = (isDark ? 0.07 : 0.16) * sPts;
 
-    // layered wireframe — high contrast in light, subtle in dark
+    // layered wireframe — tempered contrast, lets name lead (layout hierarchy)
     if (outerMatRef.current) {
-      outerMatRef.current.opacity = (isDark ? 0.30 : 0.58) * sGrat * (1 + hv * 0.10);
+      outerMatRef.current.opacity = (isDark ? 0.22 : 0.40) * sGrat * (1 + hv * 0.10);
     }
     if (midMatRef.current) {
-      midMatRef.current.opacity = (isDark ? 0.11 : 0.26) * sGrat * (1 + hv * 0.07);
+      midMatRef.current.opacity = (isDark ? 0.08 : 0.16) * sGrat * (1 + hv * 0.07);
     }
     gratMatsLat.current.forEach((m, i) => {
       if (!m) return;
       const isEquator = i === 1;
       const base = isEquator ? 0.30 : 0.24;
-      m.opacity = (isDark ? 0.32 : 0.62) * base * sGrat * (1 + hv * 0.08);
+      m.opacity = (isDark ? 0.24 : 0.42) * base * sGrat * (1 + hv * 0.08);
     });
     gratMatsLon.current.forEach((m) => {
       if (!m) return;
-      m.opacity = (isDark ? 0.32 : 0.62) * 0.22 * sGrat * (1 + hv * 0.06);
+      m.opacity = (isDark ? 0.24 : 0.42) * 0.22 * sGrat * (1 + hv * 0.06);
     });
     if (centralMatRef.current) {
-      centralMatRef.current.opacity = (isDark ? 0.38 : 0.62) * 0.26 * sGrat * (1 + hv * 0.12);
+      centralMatRef.current.opacity = (isDark ? 0.28 : 0.44) * 0.26 * sGrat * (1 + hv * 0.12);
     }
 
     // sculpture tilt — strong angled perspective, not front-on
@@ -452,10 +452,10 @@ function EnergyCore({ pal, reduced, visRef }: { pal: Palette; reduced: boolean; 
     }
 
     if (outerGlowMat.current) {
-      outerGlowMat.current.opacity = (0.12 + (reduced ? 0 : 0.03 * Math.sin(t * 0.8)) + hv * 0.055) * sInner;
+      outerGlowMat.current.opacity = (0.07 + (reduced ? 0 : 0.02 * Math.sin(t * 0.8)) + hv * 0.035) * sInner;
     }
     if (innerGlowMat.current) {
-      innerGlowMat.current.opacity = (0.30 + (reduced ? 0 : 0.05 * Math.sin(t * 1.05)) + hv * 0.12) * sInner;
+      innerGlowMat.current.opacity = (0.18 + (reduced ? 0 : 0.03 * Math.sin(t * 1.05)) + hv * 0.08) * sInner;
     }
   });
 
@@ -866,7 +866,7 @@ export default function CoreScene({ pointerRef, visRef, reduced }: Props) {
   const pal = usePalette();
   return (
     <Canvas
-      dpr={[1, 1.9]}
+      dpr={[1, 1.5]}
       camera={{ fov: 35, near: 0.1, far: 40, position: [0, 0.88, 9.6] }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {

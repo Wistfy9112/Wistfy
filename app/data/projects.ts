@@ -12,6 +12,7 @@ export type Project = {
   summary: string;
   stack: string[];
   viz: "candles" | "ledger" | "platform" | "loss";
+  featured?: boolean;
   problem: string;
   solution: string;
   implementation: string[];
@@ -34,6 +35,7 @@ export const projects: Project[] = [
       "An algorithmic trading system that watches the market, evaluates signals and executes orders automatically — with risk controls at every step.",
     stack: ["C#", ".NET", "Python", "XGBoost", "PostgreSQL", "Docker"],
     viz: "candles",
+    featured: true,
     problem:
       "Manual trading is slow and emotional. Signals appear and vanish in minutes; a human cannot watch dozens of instruments, apply consistent rules and manage risk at the same time.",
     solution:

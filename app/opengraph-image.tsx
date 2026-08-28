@@ -44,7 +44,7 @@ export default function OpengraphImage() {
             }}
           >
             <span>WISTFY / SYSTEM</span>
-            <span style={{ color: "#5b8cff" }}>CORE ACTIVE</span>
+            <span style={{ color: "#4d8dff" }}>CORE ACTIVE</span>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -65,7 +65,7 @@ export default function OpengraphImage() {
                 marginTop: 28,
                 fontSize: 30,
                 letterSpacing: 8,
-                color: "#5b8cff",
+                color: "#4d8dff",
               }}
             >
               SOFTWARE ENGINEER
